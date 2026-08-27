@@ -500,7 +500,7 @@ document.getElementById("serviceForm").addEventListener("submit",function(e){
   const telefono = document.getElementById("telefono").value;
   const localidad = document.getElementById("localidad").value;
   const direccion = document.getElementById("direccion").value;
-  const problema = document.getElementById("problema").value.trim();
+  const problema = document.querySelector('textarea#problema').value.trim();
   const horario = document.getElementById("horario").value;
 
 
