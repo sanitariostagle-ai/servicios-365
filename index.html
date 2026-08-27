@@ -533,6 +533,15 @@ document.getElementById("serviceForm").addEventListener("submit",function(e){
   const direccion = document.getElementById("direccion").value;
   const problema = document.querySelector('textarea#problema').value.trim();
   const horario = document.getElementById("horario").value;
+  const ahora = new Date();
+  const numeroSolicitud =
+    "S365-" +
+    ahora.getFullYear() +
+    String(ahora.getMonth() + 1).padStart(2, "0") +
+    String(ahora.getDate()).padStart(2, "0") +
+    "-" +
+    String(ahora.getHours()).padStart(2, "0") +
+    String(ahora.getMinutes()).padStart(2, "0");
   const organizacionMensaje =
     tipoCliente === "Particular"
         ? ""
@@ -540,6 +549,8 @@ document.getElementById("serviceForm").addEventListener("submit",function(e){
   
   const mensaje =
 `🔧 *NUEVA SOLICITUD - SERVICIOS 365*
+
+*N° de solicitud:* ${numeroSolicitud}
 
 *Servicio:* ${servicio}
 
