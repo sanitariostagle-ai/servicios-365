@@ -494,6 +494,9 @@
 
 const whatsapp = "5491127251718";
 
+const SUPABASE_URL = "https://frbnlqihbxnesdbmduia.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_....";iSyhMVlbPHgIiDhkaz2zuA_B9oEzfvz
+
 function elegirServicio(servicio){
 
   document.getElementById("servicio").value = servicio;
@@ -519,8 +522,7 @@ tipoClienteSelect.addEventListener("change", function() {
     }
 });
 
-document.getElementById("serviceForm").addEventListener("submit",function(e){
-
+  document.getElementById("serviceForm").addEventListener("submit",async function(e){
   e.preventDefault();
 
   const servicio = document.getElementById("servicio").value;
@@ -542,6 +544,43 @@ document.getElementById("serviceForm").addEventListener("submit",function(e){
     "-" +
     String(ahora.getHours()).padStart(2, "0") +
     String(ahora.getMinutes()).padStart(2, "0");
+
+try {
+  const respuesta = await fetch(`${SUPABASE_URL}/rest/v1/solicitudes`, {
+    method: "POST",
+    headers: {
+      "apikey": SUPABASE_ANON_KEY,
+      "Content-Type": "application/json",
+      "Prefer": "return=minimal"
+    },
+    body: JSON.stringify({
+      numero_solicitud: numeroSolicitud,
+      servicio: servicio,
+      urgencia: urgencia,
+      tipo_cliente: tipoCliente,
+      organizacion: tipoCliente === "Particular" ? null : nombreOrganizacion,
+      nombre: nombre,
+      telefono: telefono,
+      localidad: localidad,
+      direccion: direccion,
+      problema: problema,
+      horario: horario
+    })
+  });
+
+  if (!respuesta.ok) {
+    const detalle = await respuesta.text();
+    console.error("Error Supabase:", detalle);
+    alert("No se pudo registrar la solicitud. Revisaremos la conexión.");
+    return;
+  }
+
+} catch (error) {
+  console.error("Error de conexión con Supabase:", error);
+  alert("No se pudo conectar con la base de datos.");
+  return;
+}
+    
   const organizacionMensaje =
     tipoCliente === "Particular"
         ? ""
