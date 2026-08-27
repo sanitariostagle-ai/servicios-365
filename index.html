@@ -412,7 +412,10 @@
     <option>Empresa</option>
   </select>
 </div>
-
+<div class="field" id="campoOrganizacion" style="display:none;">
+    <label>Nombre del comercio / empresa / consorcio</label>
+    <input id="organizacion" type="text" placeholder="Ej: Empresa ABC">
+</div>
 
         <div class="field">
           <label>Nombre y apellido</label>
@@ -501,6 +504,20 @@ function elegirServicio(servicio){
 
 }
 
+  const tipoClienteSelect = document.getElementById("tipoCliente");
+const campoOrganizacion = document.getElementById("campoOrganizacion");
+const organizacionInput = document.getElementById("organizacion");
+
+tipoClienteSelect.addEventListener("change", function() {
+    if (this.value === "Particular" || this.value === "") {
+        campoOrganizacion.style.display = "none";
+        organizacionInput.required = false;
+        organizacionInput.value = "";
+    } else {
+        campoOrganizacion.style.display = "flex";
+        organizacionInput.required = true;
+    }
+});
 
 document.getElementById("serviceForm").addEventListener("submit",function(e){
 
@@ -509,14 +526,18 @@ document.getElementById("serviceForm").addEventListener("submit",function(e){
   const servicio = document.getElementById("servicio").value;
   const urgencia = document.getElementById("urgencia").value;
   const tipoCliente = document.getElementById("tipoCliente").value;
+  const nombreOrganizacion = document.getElementById("organizacion").value;
   const nombre = document.getElementById("nombre").value;
   const telefono = document.getElementById("telefono").value;
   const localidad = document.getElementById("localidad").value;
   const direccion = document.getElementById("direccion").value;
   const problema = document.querySelector('textarea#problema').value.trim();
   const horario = document.getElementById("horario").value;
-
-
+  const organizacionMensaje =
+    tipoCliente === "Particular"
+        ? ""
+        : `*Organización:* ${nombreOrganizacion}\n\n`;
+  
   const mensaje =
 `🔧 *NUEVA SOLICITUD - SERVICIOS 365*
 
@@ -525,6 +546,8 @@ document.getElementById("serviceForm").addEventListener("submit",function(e){
 *Urgencia:* ${urgencia}
 
 *Tipo de cliente:* ${tipoCliente}
+
+${organizacionMensaje}
 
 *Cliente:* ${nombre}
 
