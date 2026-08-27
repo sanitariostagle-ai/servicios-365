@@ -415,9 +415,25 @@ function mostrarSolicitudes(datos){
 
     datos.forEach(s => {
 
-        const telefonoCliente =
-            String(s.telefono || "")
-            .replace(/\D/g,"");
+        let telefonoCliente =
+    String(s.telefono || "")
+    .replace(/\D/g,"");
+
+if (telefonoCliente.startsWith("549")) {
+    // Ya está en formato correcto
+} else if (telefonoCliente.startsWith("54")) {
+    telefonoCliente = "549" + telefonoCliente.substring(2);
+} else {
+    if (telefonoCliente.startsWith("0")) {
+        telefonoCliente = telefonoCliente.substring(1);
+    }
+
+    if (telefonoCliente.startsWith("1115")) {
+        telefonoCliente = "11" + telefonoCliente.substring(4);
+    }
+
+    telefonoCliente = "549" + telefonoCliente;
+}
 
         const fila =
         `
@@ -518,9 +534,9 @@ function mostrarSolicitudes(datos){
                 <button
                     class="whatsapp"
                     onclick="window.open(
-                    'https://wa.me/54${telefonoCliente}',
+                    'https://wa.me/${telefonoCliente}',
                     '_blank'
-                    )"
+                     )"
                 >
                     WhatsApp
                 </button>
