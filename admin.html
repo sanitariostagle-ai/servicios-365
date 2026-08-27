@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Panel Administrativo | Servicios 365</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    margin:0;
+    background:#f3f6fa;
+    color:#172033;
+}
+
+header{
+    background:#087c62;
+    color:white;
+    padding:18px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+header h1{
+    margin:0;
+    font-size:24px;
+}
+
+button{
+    cursor:pointer;
+}
+
+.login-container{
+    max-width:420px;
+    margin:80px auto;
+    background:white;
+    padding:30px;
+    border-radius:14px;
+    box-shadow:0 5px 25px rgba(0,0,0,.12);
+}
+
+.login-container h2{
+    text-align:center;
+}
+
+input, select{
+    width:100%;
+    padding:10px;
+    margin:5px 0;
+    border:1px solid #ccd3dc;
+    border-radius:7px;
+}
+
+.btn{
+    background:#087c62;
+    color:white;
+    border:none;
+    border-radius:7px;
+    padding:11px 15px;
+    font-weight:bold;
+}
+
+.btn-login{
+    width:100%;
+    margin-top:12px;
+}
+
+.btn-salir{
+    background:#ffffff;
+    color:#087c62;
+    border:none;
+    padding:9px 15px;
+    border-radius:7px;
+    font-weight:bold;
+}
+
+.panel{
+    display:none;
+}
+
+.contenido{
+    padding:25px;
+}
+
+.resumen{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+}
+
+.tarjeta{
+    background:white;
+    padding:15px 22px;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.tarjeta strong{
+    display:block;
+    font-size:26px;
+    color:#087c62;
+}
+
+.tabla-contenedor{
+    overflow-x:auto;
+    background:white;
+    border-radius:12px;
+    box-shadow:0 2px 12px rgba(0,0,0,.08);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1300px;
+}
+
+th{
+    background:#e8f3ef;
+    text-align:left;
+    padding:12px;
+}
+
+td{
+    padding:10px;
+    border-bottom:1px solid #e5e7eb;
+    vertical-align:top;
+}
+
+.numero{
+    font-weight:bold;
+    color:#087c62;
+}
+
+.guardar{
+    background:#087c62;
+    color:white;
+    border:none;
+    border-radius:6px;
+    padding:8px 12px;
+}
+
+.whatsapp{
+    background:#25D366;
+    color:white;
+    border:none;
+    border-radius:6px;
+    padding:8px 12px;
+}
+
+.error{
+    color:#c62828;
+    margin-top:10px;
+    text-align:center;
+}
+
+#cargando{
+    padding:20px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div id="login" class="login-container">
+
+    <h2>Servicios 365</h2>
+    <p style="text-align:center">Panel Administrativo</p>
+
+    <input
+        type="email"
+        id="email"
+        placeholder="Correo electrónico"
+    >
+
+    <input
+        type="password"
+        id="password"
+        placeholder="Contraseña"
+    >
+
+    <button class="btn btn-login" onclick="iniciarSesion()">
+        Ingresar
+    </button>
+
+    <div id="errorLogin" class="error"></div>
+
+</div>
+
+
+<div id="panel" class="panel">
+
+<header>
+
+    <div>
+        <h1>Servicios 365</h1>
+        <small>Panel de gestión</small>
+    </div>
+
+    <button class="btn-salir" onclick="cerrarSesion()">
+        Cerrar sesión
+    </button>
+
+</header>
+
+<div class="contenido">
+
+    <div class="resumen">
+
+        <div class="tarjeta">
+            <span>Total</span>
+            <strong id="total">0</strong>
+        </div>
+
+        <div class="tarjeta">
+            <span>Nuevas</span>
+            <strong id="nuevas">0</strong>
+        </div>
+
+        <div class="tarjeta">
+            <span>En proceso</span>
+            <strong id="proceso">0</strong>
+        </div>
+
+        <div class="tarjeta">
+            <span>Finalizadas</span>
+            <strong id="finalizadas">0</strong>
+        </div>
+
+    </div>
+
+    <div id="cargando"></div>
+
+    <div class="tabla-contenedor">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>N° Solicitud</th>
+                    <th>Servicio</th>
+                    <th>Urgencia</th>
+                    <th>Cliente</th>
+                    <th>Teléfono</th>
+                    <th>Localidad</th>
+                    <th>Problema</th>
+                    <th>Estado</th>
+                    <th>Técnico</th>
+                    <th>Tel. Técnico</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaSolicitudes"></tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL = "https://frbnlqihbxnesdbmduia.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_iSyhMVlbPHgIiDhkaz2zuA_B9oEzfvz";
+
+const clienteSupabase =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+function escapar(valor){
+
+    if(valor === null || valor === undefined){
+        return "";
+    }
+
+    return String(valor)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+
+async function iniciarSesion(){
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    const error =
+        document.getElementById("errorLogin");
+
+    error.textContent = "";
+
+    const { error: errorIngreso } =
+        await clienteSupabase.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+    if(errorIngreso){
+
+        error.textContent =
+            "Correo o contraseña incorrectos.";
+
+        return;
+    }
+
+    mostrarPanel();
+}
+
+
+async function cerrarSesion(){
+
+    await clienteSupabase.auth.signOut();
+
+    document.getElementById("panel").style.display =
+        "none";
+
+    document.getElementById("login").style.display =
+        "block";
+}
+
+
+async function mostrarPanel(){
+
+    document.getElementById("login").style.display =
+        "none";
+
+    document.getElementById("panel").style.display =
+        "block";
+
+    await cargarSolicitudes();
+}
+
+
+async function cargarSolicitudes(){
+
+    document.getElementById("cargando").textContent =
+        "Cargando solicitudes...";
+
+    const { data, error } =
+        await clienteSupabase
+        .from("solicitudes")
+        .select("*")
+        .order("created_at",{
+            ascending:false
+        });
+
+    if(error){
+
+        document.getElementById("cargando").textContent =
+            "Error al cargar las solicitudes.";
+
+        console.error(error);
+
+        return;
+    }
+
+    document.getElementById("cargando").textContent = "";
+
+    mostrarSolicitudes(data);
+    actualizarResumen(data);
+}
+
+
+function actualizarResumen(datos){
+
+    document.getElementById("total").textContent =
+        datos.length;
+
+    document.getElementById("nuevas").textContent =
+        datos.filter(
+            x => x.estado === "Nueva"
+        ).length;
+
+    document.getElementById("proceso").textContent =
+        datos.filter(
+            x => x.estado === "En proceso"
+        ).length;
+
+    document.getElementById("finalizadas").textContent =
+        datos.filter(
+            x => x.estado === "Finalizada"
+        ).length;
+}
+
+
+function mostrarSolicitudes(datos){
+
+    const tabla =
+        document.getElementById("tablaSolicitudes");
+
+    tabla.innerHTML = "";
+
+    datos.forEach(s => {
+
+        const telefonoCliente =
+            String(s.telefono || "")
+            .replace(/\D/g,"");
+
+        const fila =
+        `
+        <tr>
+
+            <td class="numero">
+                ${escapar(s.numero_solicitud)}
+            </td>
+
+            <td>
+                ${escapar(s.servicio)}
+            </td>
+
+            <td>
+                ${escapar(s.urgencia)}
+            </td>
+
+            <td>
+                ${escapar(s.nombre)}
+            </td>
+
+            <td>
+                ${escapar(s.telefono)}
+            </td>
+
+            <td>
+                ${escapar(s.localidad)}
+            </td>
+
+            <td>
+                ${escapar(s.problema)}
+            </td>
+
+            <td>
+
+                <select id="estado-${s.id}">
+
+                    <option
+                    ${s.estado==="Nueva" ? "selected":""}>
+                    Nueva
+                    </option>
+
+                    <option
+                    ${s.estado==="Asignada" ? "selected":""}>
+                    Asignada
+                    </option>
+
+                    <option
+                    ${s.estado==="En proceso" ? "selected":""}>
+                    En proceso
+                    </option>
+
+                    <option
+                    ${s.estado==="Finalizada" ? "selected":""}>
+                    Finalizada
+                    </option>
+
+                    <option
+                    ${s.estado==="Cancelada" ? "selected":""}>
+                    Cancelada
+                    </option>
+
+                </select>
+
+            </td>
+
+            <td>
+
+                <input
+                    id="tecnico-${s.id}"
+                    value="${escapar(s.tecnico_asignado)}"
+                    placeholder="Nombre técnico"
+                >
+
+            </td>
+
+            <td>
+
+                <input
+                    id="telefonoTecnico-${s.id}"
+                    value="${escapar(s.telefono_tecnico)}"
+                    placeholder="Teléfono"
+                >
+
+            </td>
+
+            <td>
+
+                <button
+                    class="guardar"
+                    onclick="guardarSolicitud(${s.id})"
+                >
+                    Guardar
+                </button>
+
+                <br><br>
+
+                <button
+                    class="whatsapp"
+                    onclick="window.open(
+                    'https://wa.me/54${telefonoCliente}',
+                    '_blank'
+                    )"
+                >
+                    WhatsApp
+                </button>
+
+            </td>
+
+        </tr>
+        `;
+
+        tabla.innerHTML += fila;
+
+    });
+}
+
+
+async function guardarSolicitud(id){
+
+    const estado =
+        document.getElementById(
+            `estado-${id}`
+        ).value;
+
+    const tecnico =
+        document.getElementById(
+            `tecnico-${id}`
+        ).value.trim();
+
+    const telefonoTecnico =
+        document.getElementById(
+            `telefonoTecnico-${id}`
+        ).value.trim();
+
+
+    const { error } =
+        await clienteSupabase
+        .from("solicitudes")
+        .update({
+
+            estado:estado,
+
+            tecnico_asignado:
+                tecnico || null,
+
+            telefono_tecnico:
+                telefonoTecnico || null
+
+        })
+        .eq("id",id);
+
+
+    if(error){
+
+        alert(
+            "No se pudieron guardar los cambios."
+        );
+
+        console.error(error);
+
+        return;
+    }
+
+
+    alert("Solicitud actualizada");
+
+    cargarSolicitudes();
+}
+
+
+async function verificarSesion(){
+
+    const { data } =
+        await clienteSupabase.auth.getSession();
+
+    if(data.session){
+
+        mostrarPanel();
+
+    }else{
+
+        document.getElementById("login").style.display =
+            "block";
+    }
+}
+
+
+verificarSesion();
+
+</script>
+
+</body>
+</html>
