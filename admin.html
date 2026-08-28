@@ -8,6 +8,21 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    .acciones-botones {
+    min-width: 120px;
+    padding: 10px;
+}
+
+.acciones-botones button {
+    display: block;
+    width: 110px;
+    margin-bottom: 12px;
+}
+
+.acciones-botones button:last-child {
+    margin-bottom: 0;
+}
     
 <style>
 *{
@@ -457,7 +472,7 @@ if (telefonoCliente.startsWith("549")) {
 
         const fila =
         `
-        <tr>
+        <td class="acciones-botones">
 
             <td class="numero">
                 ${escapar(s.numero_solicitud)}
