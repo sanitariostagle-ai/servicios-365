@@ -7,7 +7,8 @@
 <title>Panel Administrativo | Servicios 365</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    
 <style>
 *{
     box-sizing:border-box;
@@ -213,6 +214,25 @@ td{
 </header>
 
 <div class="contenido">
+
+    <div style="margin-bottom:20px;">
+    <input
+        type="file"
+        id="archivoExcel"
+        accept=".xlsx,.xls,.ods"
+        style="display:none"
+        onchange="importarExcel(this.files[0])"
+    >
+
+    <button
+        class="btn"
+        onclick="document.getElementById('archivoExcel').click()"
+    >
+        📥 Importar Excel
+    </button>
+
+    <span id="resultadoImportacion" style="margin-left:15px;font-weight:bold;"></span>
+</div>
 
     <div class="resumen">
 
@@ -620,7 +640,416 @@ async function verificarSesion(){
             "block";
     }
 }
+function normalizarTexto(texto) {
+    return String(texto || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim();
+}
 
+
+function obtenerDato(fila, nombres) {
+
+    const mapa = {};
+
+    Object.keys(fila).forEach(clave => {
+        mapa[normalizarTexto(clave)] = fila[clave];
+    });
+
+    for (const nombre of nombres) {
+
+        const clave = normalizarTexto(nombre);
+
+        if (
+            mapa[clave] !== undefined &&
+            mapa[clave] !== null &&
+            String(mapa[clave]).trim() !== ""
+        ) {
+            return mapa[clave];
+        }
+    }
+
+    return "";
+}
+
+
+function prepararNumeroSolicitud(valor) {
+
+    let numero = String(valor || "").trim();
+
+    if (!numero) {
+        return "";
+    }
+
+    if (numero.toUpperCase().startsWith("S365-")) {
+        return numero.toUpperCase();
+    }
+
+    return "S365-" + numero;
+}
+
+
+async function importarExcel(archivo) {
+
+    if (!archivo) {
+        return;
+    }
+
+    const resultado =
+        document.getElementById("resultadoImportacion");
+
+    resultado.textContent = "⏳ Leyendo planilla...";
+
+    try {
+
+        const contenido =
+            await archivo.arrayBuffer();
+
+        const libro =
+            XLSX.read(contenido, {
+                type: "array",
+                cellDates: true
+            });
+
+
+        let nombreHoja =
+            libro.SheetNames.find(
+                nombre =>
+                    normalizarTexto(nombre) ===
+                    "base de solicitudes"
+            );
+
+
+        if (!nombreHoja) {
+
+            nombreHoja =
+                libro.SheetNames.find(
+                    nombre =>
+                        normalizarTexto(nombre)
+                        .includes("importar")
+                );
+        }
+
+
+        if (!nombreHoja) {
+            nombreHoja = libro.SheetNames[0];
+        }
+
+
+        const hoja =
+            libro.Sheets[nombreHoja];
+
+
+        const filas =
+            XLSX.utils.sheet_to_json(
+                hoja,
+                {
+                    defval: "",
+                    raw: false
+                }
+            );
+
+
+        if (!filas.length) {
+
+            resultado.textContent =
+                "⚠️ La planilla no tiene registros.";
+
+            return;
+        }
+
+
+        const registros = [];
+
+
+        filas.forEach(fila => {
+
+            const numero =
+                prepararNumeroSolicitud(
+                    obtenerDato(
+                        fila,
+                        [
+                            "numero_solicitud",
+                            "n° solicitud",
+                            "nº solicitud",
+                            "orden",
+                            "numero orden",
+                            "n° orden"
+                        ]
+                    )
+                );
+
+
+            const servicio =
+                obtenerDato(
+                    fila,
+                    ["servicio"]
+                );
+
+
+            const nombre =
+                obtenerDato(
+                    fila,
+                    [
+                        "nombre",
+                        "cliente",
+                        "nombre / cliente",
+                        "nombre/cliente"
+                    ]
+                );
+
+
+            if (
+                !numero &&
+                !servicio &&
+                !nombre
+            ) {
+                return;
+            }
+
+
+            registros.push({
+
+                numero_solicitud: numero,
+
+                servicio:
+                    servicio || null,
+
+                urgencia:
+                    obtenerDato(
+                        fila,
+                        ["urgencia"]
+                    ) || null,
+
+                tipo_cliente:
+                    obtenerDato(
+                        fila,
+                        [
+                            "tipo cliente",
+                            "tipo_cliente"
+                        ]
+                    ) || null,
+
+                organizacion:
+                    obtenerDato(
+                        fila,
+                        ["organizacion"]
+                    ) || null,
+
+                nombre:
+                    nombre || null,
+
+                telefono:
+                    obtenerDato(
+                        fila,
+                        [
+                            "telefono",
+                            "teléfono",
+                            "whatsapp"
+                        ]
+                    ) || null,
+
+                localidad:
+                    obtenerDato(
+                        fila,
+                        ["localidad"]
+                    ) || null,
+
+                direccion:
+                    obtenerDato(
+                        fila,
+                        [
+                            "direccion",
+                            "dirección"
+                        ]
+                    ) || null,
+
+                problema:
+                    obtenerDato(
+                        fila,
+                        ["problema"]
+                    ) || null,
+
+                horario:
+                    obtenerDato(
+                        fila,
+                        ["horario"]
+                    ) || null,
+
+                tecnico_asignado:
+                    obtenerDato(
+                        fila,
+                        [
+                            "tecnico",
+                            "técnico",
+                            "tecnico asignado",
+                            "tecnico_asignado"
+                        ]
+                    ) || null,
+
+                telefono_tecnico:
+                    obtenerDato(
+                        fila,
+                        [
+                            "telefono tecnico",
+                            "teléfono técnico",
+                            "tel. tecnico",
+                            "tel tecnico",
+                            "telefono_tecnico"
+                        ]
+                    ) || null,
+
+                estado:
+                    obtenerDato(
+                        fila,
+                        ["estado"]
+                    ) || "Nueva"
+
+            });
+
+        });
+
+
+        if (!registros.length) {
+
+            resultado.textContent =
+                "⚠️ No encontré solicitudes para importar.";
+
+            return;
+        }
+
+
+        resultado.textContent =
+            "⏳ Comprobando duplicados...";
+
+
+        const {
+            data: existentes,
+            error: errorExistentes
+        } =
+            await clienteSupabase
+            .from("solicitudes")
+            .select("numero_solicitud");
+
+
+        if (errorExistentes) {
+            throw errorExistentes;
+        }
+
+
+        const numerosExistentes =
+            new Set(
+                (existentes || [])
+                .map(x =>
+                    String(
+                        x.numero_solicitud || ""
+                    ).trim()
+                )
+            );
+
+
+        const numerosArchivo =
+            new Set();
+
+
+        const nuevos =
+            registros.filter(registro => {
+
+                const numero =
+                    String(
+                        registro.numero_solicitud || ""
+                    ).trim();
+
+
+                if (!numero) {
+                    return false;
+                }
+
+
+                if (
+                    numerosExistentes.has(numero) ||
+                    numerosArchivo.has(numero)
+                ) {
+                    return false;
+                }
+
+
+                numerosArchivo.add(numero);
+
+                return true;
+
+            });
+
+
+        const duplicados =
+            registros.length - nuevos.length;
+
+
+        if (!nuevos.length) {
+
+            resultado.textContent =
+                `ℹ️ No hay órdenes nuevas. ${duplicados} ya existían.`;
+
+            return;
+        }
+
+
+        resultado.textContent =
+            `⏳ Importando ${nuevos.length} solicitudes...`;
+
+
+        let importadas = 0;
+
+
+        for (
+            let i = 0;
+            i < nuevos.length;
+            i += 100
+        ) {
+
+            const lote =
+                nuevos.slice(i, i + 100);
+
+
+            const { error } =
+                await clienteSupabase
+                .from("solicitudes")
+                .insert(lote);
+
+
+            if (error) {
+                throw error;
+            }
+
+
+            importadas += lote.length;
+        }
+
+
+        resultado.textContent =
+            `✅ ${importadas} importadas · ${duplicados} duplicadas omitidas`;
+
+
+        document.getElementById(
+            "archivoExcel"
+        ).value = "";
+
+
+        await cargarSolicitudes();
+
+    }
+    catch(error) {
+
+        console.error(
+            "Error importando Excel:",
+            error
+        );
+
+        resultado.textContent =
+            "❌ Error al importar la planilla.";
+    }
+}
 
 verificarSesion();
 
