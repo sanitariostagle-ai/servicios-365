@@ -712,29 +712,25 @@ async function importarExcel(archivo) {
                 cellDates: true
             });
 
+           let nombreHoja =
+    libro.SheetNames.find(
+        nombre =>
+            normalizarTexto(nombre)
+            .includes("importar")
+    );
 
-        let nombreHoja =
-            libro.SheetNames.find(
-                nombre =>
-                    normalizarTexto(nombre) ===
-                    "base de solicitudes"
-            );
+if (!nombreHoja) {
+    nombreHoja =
+        libro.SheetNames.find(
+            nombre =>
+                normalizarTexto(nombre) ===
+                "base de solicitudes"
+        );
+}
 
-
-        if (!nombreHoja) {
-
-            nombreHoja =
-                libro.SheetNames.find(
-                    nombre =>
-                        normalizarTexto(nombre)
-                        .includes("importar")
-                );
-        }
-
-
-        if (!nombreHoja) {
-            nombreHoja = libro.SheetNames[0];
-        }
+if (!nombreHoja) {
+    nombreHoja = libro.SheetNames[0];
+}
 
 
         const hoja =
