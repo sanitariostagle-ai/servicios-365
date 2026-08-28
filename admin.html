@@ -797,12 +797,11 @@ if (!nombreHoja) {
 
 
             if (
-                !numero &&
-                !servicio &&
-                !nombre
-            ) {
-                return;
-            }
+    !numero ||
+    (!servicio && !nombre)
+) {
+    return;
+}
 
 
             registros.push({
