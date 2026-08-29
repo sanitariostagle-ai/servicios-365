@@ -586,36 +586,20 @@ if (telefonoCliente.startsWith("549")) {
 
             </td>
 
-            <td>
+<td class="acciones-botones">
+    <button class="btn guardar" onclick="guardarSolicitud(${s.id})">
+        Guardar
+    </button>
 
-                <button
-                    class="guardar"
-                    onclick="guardarSolicitud(${s.id})"
-                >
-                    Guardar
-                </button>
+    <button class="btn whatsapp" onclick="window.open('https://wa.me/${telefonoCliente}', '_blank')">
+        WhatsApp
+    </button>
 
-                <br><br>
-
-                <button
-                    class="whatsapp"
-                    onclick="window.open(
-                    'https://wa.me/${telefonoCliente}',
-                    '_blank'
-                     )"
-                >
-                    WhatsApp
-                </button>
-
-                <button
-      class="btn imprimir"
-    onclick="imprimirOrden(${s.id})"
->
-    🖨 Imprimir
-</button>
-
-            </td>
-
+    <button class="btn imprimir" onclick="imprimirOrden(${s.id})">
+        🖨 Imprimir
+    </button>
+</td>
+   
         </tr>
         `;
 
