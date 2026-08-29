@@ -1188,6 +1188,35 @@ async function imprimirOrden(id) {
     box-sizing: border-box;
 }
 
+@media screen and (max-width: 800px) {
+
+    body {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ancho {
+        grid-column: 1;
+    }
+}
+
+@media print {
+
+    body {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+    }
+
+    .no-imprimir {
+        display: none;
+    }
+}
+
             .firmas {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
