@@ -1133,10 +1133,18 @@ async function imprimirOrden(id) {
             }
 
             body {
-                font-family: Arial, sans-serif;
-                color: #222;
-                margin: 0;
-            }
+    font-family: Arial, sans-serif;
+    color: #222;
+    margin: 0 auto;
+    padding: 15px;
+    box-sizing: border-box;
+
+    width: 100%;
+    max-width: 190mm;
+
+    font-size: 13px;
+    overflow-x: hidden;
+}
 
             .encabezado {
                 border-bottom: 3px solid #08756b;
@@ -1161,34 +1169,24 @@ async function imprimirOrden(id) {
             }
 
             .grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 10px 25px;
-                margin-bottom: 18px;
-            }
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px 20px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 18px;
+}
 
-            .campo {
-                border-bottom: 1px solid #ccc;
-                padding: 8px 0;
-            }
+ .campo {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
 
-            .campo strong {
-                display: block;
-                font-size: 12px;
-                color: #555;
-                margin-bottom: 4px;
-            }
-
-            .ancho {
-                grid-column: 1 / -1;
-            }
-
-            .caja {
-                min-height: 75px;
-                border: 1px solid #aaa;
-                padding: 10px;
-                margin-top: 6px;
-            }
+.caja {
+    width: 100%;
+    box-sizing: border-box;
+}
 
             .firmas {
                 display: grid;
