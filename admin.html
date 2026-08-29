@@ -11,6 +11,12 @@
 
     <style>
 
+    .acciones-botones .imprimir {
+    background: #455a64 !important;
+    color: white !important;
+    border: none !important;
+}
+
 .acciones-botones {
     min-width: 135px;
     padding: 8px;
@@ -602,7 +608,7 @@ if (telefonoCliente.startsWith("549")) {
                 </button>
 
                 <button
-      class="imprimir"
+      class="btn imprimir"
     onclick="imprimirOrden(${s.id})"
 >
     🖨 Imprimir
