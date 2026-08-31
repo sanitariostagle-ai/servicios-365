@@ -606,6 +606,127 @@ placeholder="Nombre o palabra clave"
 
 </section>
 
+<h2 class="titulo-resultados">
+Técnicos disponibles
+</h2>
+
+<section id="resultados"></section>
+
+<section class="registro">
+
+<div>
+<h2>¿Sos técnico?</h2>
+<p>Próximamente vas a poder formar parte de la red de Servicios 365.</p>
+</div>
+
+<a href="https://wa.me/5491127251718?text=Hola%20quiero%20registrarme%20como%20t%C3%A9cnico%20en%20Servicios%20365"
+target="_blank">
+Quiero registrarme
+</a>
+
+</section>
+
+</main>
+
+<script>
+
+/*
+Acá vamos a cargar los técnicos desde el
+Panel Administrativo de Servicios 365.
+*/
+
+const tecnicos = [];
+
+function mostrarTecnicos(lista){
+
+    const contenedor =
+    document.getElementById("resultados");
+
+    contenedor.innerHTML = "";
+
+    if(lista.length === 0){
+
+        contenedor.innerHTML = `
+        <div class="vacio">
+
+            <div class="icono">🔧</div>
+
+            <h3>Estamos incorporando técnicos</h3>
+
+            <p>
+            Próximamente vas a poder encontrar profesionales
+            verificados por especialidad y zona.
+            </p>
+
+        </div>
+        `;
+
+        return;
+    }
+
+    lista.forEach(tecnico => {
+
+        contenedor.innerHTML += `
+
+        <article class="tecnico">
+
+            <div class="tecnico-superior">
+
+                <div class="avatar">🔧</div>
+
+                <div>
+                    <h3>${tecnico.nombre}</h3>
+                    <div class="especialidad">
+                        ${tecnico.especialidad}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="datos">
+
+                📍 ${tecnico.zona}<br>
+                🛠 ${tecnico.descripcion}
+
+            </div>
+
+            <div class="acciones">
+
+                <a
+                class="whatsapp"
+                href="https://wa.me/${tecnico.whatsapp}"
+                target="_blank">
+                WhatsApp
+                </a>
+
+                <a
+                class="llamar"
+                href="tel:${tecnico.telefono}">
+                Llamar
+                </a>
+
+            </div>
+
+        </article>
+
+        `;
+
+    });
+
+}
+
+function buscarTecnicos(){
+
+    const especialidad =
+    document.getElementById("especialidad").value.toLowerCase();
+
+    const zona =
+    document.getElementById("zona").value.toLowerCase();
+
+    const texto =
+    document.getElementById("texto").value.toLowerCase();
+
+    const filtrados = tecnicos.filter(t => {
 
         const coincideEspecialidad =
         !especialidad ||
