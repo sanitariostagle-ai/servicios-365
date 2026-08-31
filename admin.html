@@ -535,38 +535,17 @@ if (telefonoCliente.startsWith("549")) {
 
 <td>
     <select id="estado-${s.id}">
-        ...
+        <option value="Nueva" ${s.estado === "Nueva" ? "selected" : ""}>Nueva</option>
+
+        <option value="Asignada" ${s.estado === "Asignada" ? "selected" : ""}>Asignada</option>
+
+        <option value="En proceso" ${s.estado === "En proceso" ? "selected" : ""}>En proceso</option>
+
+        <option value="Finalizada" ${s.estado === "Finalizada" ? "selected" : ""}>Finalizada</option>
+
+        <option value="Cancelada" ${s.estado === "Cancelada" ? "selected" : ""}>Cancelada</option>
     </select>
 </td>
-
-                    <option
-                    ${s.estado==="Nueva" ? "selected":""}>
-                    Nueva
-                    </option>
-
-                    <option
-                    ${s.estado==="Asignada" ? "selected":""}>
-                    Asignada
-                    </option>
-
-                    <option
-                    ${s.estado==="En proceso" ? "selected":""}>
-                    En proceso
-                    </option>
-
-                    <option
-                    ${s.estado==="Finalizada" ? "selected":""}>
-                    Finalizada
-                    </option>
-
-                    <option
-                    ${s.estado==="Cancelada" ? "selected":""}>
-                    Cancelada
-                    </option>
-
-                </select>
-
-            </td>
 
             <td>
 
