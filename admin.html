@@ -530,10 +530,14 @@ if (telefonoCliente.startsWith("549")) {
             </td>
 
             <td>
-                ${escapar(s.problema)}
-            </td>
-            
-                <select id="estado-${s.id}">
+    ${escapar(s.problema)}
+</td>
+
+<td>
+    <select id="estado-${s.id}">
+        ...
+    </select>
+</td>
 
                     <option
                     ${s.estado==="Nueva" ? "selected":""}>
