@@ -5,6 +5,97 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Servicios 365 | Sanitarios Tagle</title>
 
+/* ACCESOS TECNICOS Y COMERCIOS */
+
+.accesos-365{
+    max-width:1200px;
+    margin:35px auto 30px;
+    padding:0 20px;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:22px;
+}
+
+.acceso-card{
+    min-height:130px;
+    padding:25px 28px;
+    border-radius:20px;
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    box-shadow:0 8px 25px rgba(0,0,0,.10);
+    text-decoration:none;
+    color:#17203a;
+    display:flex;
+    align-items:center;
+    gap:20px;
+    transition:.25s ease;
+}
+
+.acceso-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 14px 35px rgba(0,0,0,.16);
+}
+
+.acceso-icono{
+    width:65px;
+    height:65px;
+    min-width:65px;
+    border-radius:16px;
+    background:#eef4ff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:32px;
+}
+
+.acceso-card h2{
+    margin:0 0 7px;
+    font-size:23px;
+    color:#17203a;
+}
+
+.acceso-card p{
+    margin:0;
+    font-size:15px;
+    color:#657087;
+}
+
+.acceso-card span{
+    margin-left:auto;
+    font-size:30px;
+    font-weight:bold;
+    color:#2457d6;
+}
+
+@media(max-width:700px){
+    .accesos-365{
+        grid-template-columns:1fr;
+        margin-top:20px;
+        gap:14px;
+        padding:0 15px;
+    }
+
+    .acceso-card{
+        min-height:110px;
+        padding:20px;
+    }
+
+    .acceso-icono{
+        width:55px;
+        height:55px;
+        min-width:55px;
+        font-size:27px;
+    }
+
+    .acceso-card h2{
+        font-size:20px;
+    }
+
+    .acceso-card p{
+        font-size:14px;
+    }
+}
+  
   <style>
     *{
       box-sizing:border-box;
