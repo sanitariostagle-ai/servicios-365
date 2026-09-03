@@ -790,8 +790,15 @@ async function cargarTecnicosActivos(){
         <td>${escapar(t.whatsapp || "")}</td>
         <td>${escapar(t.matricula || "Sin matrícula")}</td>
         <td>${escapar(t.servicios || "")}</td>
-        <td>✅ Activo</td>
-        <td>Administrar</td>
+        <td>${t.activo ? "✅ Activo" : "⛔ Inactivo"}</td>
+
+<td>
+  <button
+    onclick="cambiarEstadoTecnico(${t.id}, ${t.activo})"
+    style="background:${t.activo ? "#dc2626" : "#16a34a"};color:white;border:none;padding:8px 12px;border-radius:7px;cursor:pointer;">
+    ${t.activo ? "⛔ Dar de baja" : "✅ Reactivar"}
+  </button>
+</td>
       </tr>
     `;
 
@@ -799,6 +806,38 @@ async function cargarTecnicosActivos(){
 
 }
 
+    async function cambiarEstadoTecnico(id, estadoActual){
+
+  const nuevoEstado = !estadoActual;
+
+  const mensaje = nuevoEstado
+    ? "¿Querés reactivar este técnico?"
+    : "¿Querés dar de baja este técnico?";
+
+  if(!confirm(mensaje)){
+    return;
+  }
+
+  const { error } = await clienteSupabase
+    .from("tecnicos")
+    .update({ activo: nuevoEstado })
+    .eq("id", id);
+
+  if(error){
+    console.error(error);
+    alert("No se pudo cambiar el estado del técnico.");
+    return;
+  }
+
+  alert(
+    nuevoEstado
+      ? "Técnico reactivado."
+      : "Técnico dado de baja."
+  );
+
+  await cargarTecnicosActivos();
+}
+    
 function mostrarSolicitudesTecnicos(datos){
 
   const tabla = document.getElementById("tablaTecnicosPendientes");
