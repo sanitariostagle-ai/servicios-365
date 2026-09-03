@@ -740,8 +740,15 @@ function mostrarSolicitudesTecnicos(datos){
           style="background:#dc2626;color:white;border:none;padding:8px 12px;border-radius:7px;cursor:pointer;margin:2px;">
           ❌ Rechazar
         </button>
-      `;
+     
+        <button
+         onclick="eliminarTecnico(${t.id})"
+         style="background:#555;color:white;border:none;padding:8px 12px;border-radius:7px;cursor:pointer;margin-left:5px;">
+          🗑️ Eliminar
+       </button>
 
+ `;
+        
     } else {
       acciones = escapar(t.estado);
     }
@@ -828,9 +835,8 @@ async function aprobarTecnico(id){
 
   await cargarSolicitudesTecnicos();
 }
-
-
-async function rechazarTecnico(id){
+async function rechazarTecnico(id)
+{
 
   if(!confirm("¿Querés rechazar esta solicitud?")){
     return;
@@ -853,6 +859,29 @@ async function rechazarTecnico(id){
   await cargarSolicitudesTecnicos();
 }
 
+async function eliminarTecnico(id){
+
+  if(!confirm("¿Seguro que querés eliminar esta solicitud?")){
+    return;
+  }
+
+  const { error } =
+    await clienteSupabase
+      .from("solicitudes_tecnicos")
+      .delete()
+      .eq("id", id);
+
+  if(error){
+    console.error(error);
+    alert("No se pudo eliminar la solicitud.");
+    return;
+  }
+
+  alert("Solicitud eliminada.");
+
+  await cargarSolicitudesTecnicos();
+}
+    
 async function verificarSesion(){
 
     const { data } =
