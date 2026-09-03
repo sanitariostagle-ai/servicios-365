@@ -330,6 +330,39 @@ td{
 
         </table>
 
+<div style="margin-top: 35px;">
+
+  <h2>👷 Solicitudes de técnicos</h2>
+
+  <p>
+    Revisá los profesionales que quieren formar parte de Servicios 365.
+  </p>
+
+  <div style="overflow-x:auto;">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Especialidad</th>
+          <th>Zona</th>
+          <th>WhatsApp</th>
+          <th>Matrícula</th>
+          <th>Servicios</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody id="tablaTecnicosPendientes">
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+        
     </div>
 
 </div>
@@ -410,13 +443,11 @@ async function cerrarSesion(){
 
 async function mostrarPanel(){
 
-    document.getElementById("login").style.display =
-        "none";
+  document.getElementById("login").style.display = "none";
+  document.getElementById("panel").style.display = "block";
 
-    document.getElementById("panel").style.display =
-        "block";
-
-    await cargarSolicitudes();
+  await cargarSolicitudes();
+  await cargarSolicitudesTecnicos();
 }
 
 
