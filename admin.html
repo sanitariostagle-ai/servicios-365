@@ -673,6 +673,185 @@ async function guardarSolicitud(id){
     cargarSolicitudes();
 }
 
+async function cargarSolicitudesTecnicos(){
+
+  const tabla = document.getElementById("tablaTecnicosPendientes");
+
+  tabla.innerHTML = `
+    <tr>
+      <td colspan="8">Cargando solicitudes...</td>
+    </tr>
+  `;
+
+  const { data, error } = await clienteSupabase
+    .from("solicitudes_tecnicos")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if(error){
+    console.error(error);
+
+    tabla.innerHTML = `
+      <tr>
+        <td colspan="8">No se pudieron cargar las solicitudes.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  mostrarSolicitudesTecnicos(data || []);
+}
+
+
+function mostrarSolicitudesTecnicos(datos){
+
+  const tabla = document.getElementById("tablaTecnicosPendientes");
+
+  tabla.innerHTML = "";
+
+  if(datos.length === 0){
+
+    tabla.innerHTML = `
+      <tr>
+        <td colspan="8">No hay solicitudes de técnicos.</td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  datos.forEach(t => {
+
+    const telefono = String(t.whatsapp || "").replace(/\D/g,"");
+
+    let acciones = "";
+
+    if(t.estado === "pendiente"){
+
+      acciones = `
+        <button
+          onclick="aprobarTecnico(${t.id})"
+          style="background:#16a34a;color:white;border:none;padding:8px 12px;border-radius:7px;cursor:pointer;margin:2px;">
+          ✅ Aprobar
+        </button>
+
+        <button
+          onclick="rechazarTecnico(${t.id})"
+          style="background:#dc2626;color:white;border:none;padding:8px 12px;border-radius:7px;cursor:pointer;margin:2px;">
+          ❌ Rechazar
+        </button>
+      `;
+
+    } else {
+      acciones = escapar(t.estado);
+    }
+
+    tabla.innerHTML += `
+      <tr>
+        <td>${escapar(t.nombre)}</td>
+        <td>${escapar(t.especialidad)}</td>
+        <td>${escapar(t.zona)}</td>
+
+        <td>
+          <a href="https://wa.me/${telefono}" target="_blank">
+            ${escapar(t.whatsapp)}
+          </a>
+        </td>
+
+        <td>${escapar(t.matricula || "Sin matrícula")}</td>
+        <td>${escapar(t.descripcion)}</td>
+        <td>${escapar(t.estado)}</td>
+        <td>${acciones}</td>
+      </tr>
+    `;
+  });
+}
+
+
+async function aprobarTecnico(id){
+
+  if(!confirm("¿Aprobar y publicar este técnico?")){
+    return;
+  }
+
+  const { data: solicitud, error: errorSolicitud } =
+    await clienteSupabase
+      .from("solicitudes_tecnicos")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+  if(errorSolicitud){
+    console.error(errorSolicitud);
+    alert("No se pudo leer la solicitud.");
+    return;
+  }
+
+  if(solicitud.estado !== "pendiente"){
+    alert("Esta solicitud ya fue procesada.");
+    cargarSolicitudesTecnicos();
+    return;
+  }
+
+  const { error: errorTecnico } =
+    await clienteSupabase
+      .from("tecnicos")
+      .insert([{
+        nombre: solicitud.nombre,
+        especialidad: solicitud.especialidad,
+        zona: solicitud.zona,
+        whatsapp: solicitud.whatsapp,
+        matricula: solicitud.matricula || null,
+        descripcion: solicitud.descripcion,
+        activo: true
+      }]);
+
+  if(errorTecnico){
+    console.error(errorTecnico);
+    alert("No se pudo publicar el técnico.");
+    return;
+  }
+
+  const { error: errorEstado } =
+    await clienteSupabase
+      .from("solicitudes_tecnicos")
+      .update({ estado: "aprobado" })
+      .eq("id", id);
+
+  if(errorEstado){
+    console.error(errorEstado);
+    alert("El técnico fue publicado, pero hubo un problema actualizando el estado.");
+    return;
+  }
+
+  alert("✅ Técnico aprobado y publicado.");
+
+  await cargarSolicitudesTecnicos();
+}
+
+
+async function rechazarTecnico(id){
+
+  if(!confirm("¿Querés rechazar esta solicitud?")){
+    return;
+  }
+
+  const { error } =
+    await clienteSupabase
+      .from("solicitudes_tecnicos")
+      .update({ estado: "rechazado" })
+      .eq("id", id);
+
+  if(error){
+    console.error(error);
+    alert("No se pudo rechazar la solicitud.");
+    return;
+  }
+
+  alert("Solicitud rechazada.");
+
+  await cargarSolicitudesTecnicos();
+}
 
 async function verificarSesion(){
 
