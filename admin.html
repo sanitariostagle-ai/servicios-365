@@ -361,6 +361,42 @@ td{
 
   </div>
 
+<div style="margin-top:35px;">
+
+  <h2>🛠️ Técnicos activos</h2>
+
+  <p>
+    Administrá los profesionales publicados en Servicios 365.
+  </p>
+
+  <div style="overflow-x:auto;">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Especialidad</th>
+          <th>Zona</th>
+          <th>WhatsApp</th>
+          <th>Matrícula</th>
+          <th>Servicios</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody id="tablaTecnicosActivos">
+        <tr>
+          <td colspan="8">Cargando técnicos...</td>
+        </tr>
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+    
 </div>
         
     </div>
@@ -448,6 +484,7 @@ async function mostrarPanel(){
 
   await cargarSolicitudes();
   await cargarSolicitudesTecnicos();
+  await cargarTecnicosActivos();  
 }
 
 
@@ -701,7 +738,66 @@ async function cargarSolicitudesTecnicos(){
 
   mostrarSolicitudesTecnicos(data || []);
 }
+async function cargarTecnicosActivos(){
 
+  const tabla = document.getElementById("tablaTecnicosActivos");
+
+  if(!tabla) return;
+
+  tabla.innerHTML = `
+    <tr>
+      <td colspan="8">Cargando técnicos...</td>
+    </tr>
+  `;
+
+  const { data, error } = await clienteSupabase
+    .from("tecnicos")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if(error){
+    console.error(error);
+
+    tabla.innerHTML = `
+      <tr>
+        <td colspan="8">No se pudieron cargar los técnicos.</td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  if(!data || data.length === 0){
+
+    tabla.innerHTML = `
+      <tr>
+        <td colspan="8">No hay técnicos activos.</td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  tabla.innerHTML = "";
+
+  data.forEach(t => {
+
+    tabla.innerHTML += `
+      <tr>
+        <td>${escapar(t.nombre || "")}</td>
+        <td>${escapar(t.especialidad || "")}</td>
+        <td>${escapar(t.zona || "")}</td>
+        <td>${escapar(t.whatsapp || "")}</td>
+        <td>${escapar(t.matricula || "Sin matrícula")}</td>
+        <td>${escapar(t.servicios || "")}</td>
+        <td>✅ Activo</td>
+        <td>Administrar</td>
+      </tr>
+    `;
+
+  });
+
+}
 
 function mostrarSolicitudesTecnicos(datos){
 
