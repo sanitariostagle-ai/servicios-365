@@ -750,7 +750,17 @@ function mostrarSolicitudesTecnicos(datos){
  `;
         
     } else {
-      acciones = escapar(t.estado);
+acciones = `
+  <span style="margin-right:8px;">
+    ${escapar(t.estado)}
+  </span>
+
+  <button
+    onclick="eliminarTecnico(${t.id})"
+    style="background:#555;color:white;border:none;padding:8px 12px;border-radius:7px;cursor:pointer;">
+    🗑️ Eliminar
+  </button>
+`;
     }
 
     tabla.innerHTML += `
