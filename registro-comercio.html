@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Registro de Comercio | Servicios 365</title>
+  
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f3f6fb;
+      color: #17213a;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #07136f, #123fe5);
+      color: white;
+      padding: 28px 20px 70px;
+    }
+
+    .header-contenido {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .marca {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: white;
+      color: #1022a5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .marca-texto strong {
+      display: block;
+      font-size: 18px;
+    }
+
+    .marca-texto span {
+      font-size: 12px;
+      opacity: .85;
+    }
+
+    .header h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+    }
+
+    .header p {
+      margin: 0;
+      font-size: 16px;
+      opacity: .9;
+    }
+
+    .contenedor {
+      max-width: 760px;
+      margin: -42px auto 50px;
+      padding: 0 18px;
+    }
+
+    .tarjeta {
+      background: white;
+      border-radius: 22px;
+      padding: 30px;
+      box-shadow: 0 12px 40px rgba(16, 32, 110, .12);
+    }
+
+    .tarjeta h2 {
+      margin-top: 0;
+      font-size: 24px;
+    }
+
+    .intro {
+      color: #667085;
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+
+    .campo {
+      margin-bottom: 19px;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #d8deec;
+      border-radius: 11px;
+      padding: 14px 15px;
+      font-size: 16px;
+      background: white;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #1945de;
+      box-shadow: 0 0 0 3px rgba(25, 69, 222, .10);
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .ayuda {
+      margin-top: 5px;
+      color: #7b8498;
+      font-size: 13px;
+    }
+
+    .aceptacion {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin: 24px 0;
+      background: #f6f8fc;
+      padding: 14px;
+      border-radius: 11px;
+    }
+
+    .aceptacion input {
+      width: auto;
+      margin-top: 3px;
+    }
+
+    .aceptacion label {
+      margin: 0;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .boton {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, #0a1da8, #174ee9);
+    }
+
+    .boton:hover {
+      opacity: .95;
+    }
+
+    .boton:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .volver {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #123cc9;
+      font-weight: 700;
+    }
+
+    .mensaje {
+      display: none;
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      line-height: 1.5;
+    }
+
+    .mensaje.ok {
+      display: block;
+      background: #e9f9ef;
+      color: #176b36;
+      border: 1px solid #bfe9cc;
+    }
+
+    .mensaje.error {
+      display: block;
+      background: #fff0f0;
+      color: #a12424;
+      border: 1px solid #f0c4c4;
+    }
+
+    @media (max-width: 600px) {
+      .header {
+        padding-top: 20px;
+        padding-bottom: 60px;
+      }
+
+      .header h1 {
+        font-size: 28px;
+      }
+
+      .tarjeta {
+        padding: 22px 18px;
+        border-radius: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="header-contenido">
+
+      <div class="marca">
+        <div class="logo">365</div>
+
+        <div class="marca-texto">
+          <strong>Servicios 365</strong>
+          <span>Soluciones Técnicas</span>
+        </div>
+      </div>
+
+      <h1>👷 Sumate a Servicios 365</h1>
+
+      <p>
+        Registrá tus datos para formar parte de nuestra red de profesionales.
+      </p>
+
+    </div>
+  </header>
+
+
+  <main class="contenedor">
+
+    <section class="tarjeta">
+
+      <h2>Registro de comercio</h2>
+      
+      <p class="intro">
+        Completá los datos de tu comercio. Revisaremos tu solicitud antes de publicarlo en Servicios 365.
+      </p>
+
+
+      <form id="formTecnico">
+
+        <div class="campo">
+          <label for="nombre">Nombre comercial *</label>
+          <input
+            type="text"
+            id="nombre"
+            placeholder="Ej: Ferretería El Progreso"
+            required
+          >
+        </div>
+
+
+        <div class="campo">
+          <label for="categoria">Categoría *</label>
+
+<select id="categoria" required>
+  <option value="">Cargando categorías...</option>
+</select>
+        </div>
+
+
+        <div class="campo">
+  <label for="localidad">Localidad *</label>
+
+  <input
+    type="text"
+    id="localidad"
+    placeholder="Ej: Lanús Oeste"
+    required
+  >
+</div>
+
+<div class="campo">
+  <label for="direccion">Dirección *</label>
+
+  <input
+    type="text"
+    id="direccion"
+    placeholder="Ej: Tagle 3589"
+    required
+  >
+</div>
+
+
+        <div class="campo">
+          <label for="whatsapp">WhatsApp *</label>
+
+          <input
+            type="tel"
+            id="whatsapp"
+            placeholder="Ej: 5491123456789"
+            required
+          >
+
+          <div class="ayuda">
+            Escribilo con código de país, sin +, espacios ni guiones.
+          </div>
+        </div>
+
+
+       <div class="campo">
+  <label for="telefono">Teléfono</label>
+
+  <input
+    type="tel"
+    id="telefono"
+    placeholder="Ej: 4241-0000"
+  >
+</div>
+
+<div class="campo">
+  <label for="email">Email</label>
+
+  <input
+    type="email"
+    id="email"
+    placeholder="Ej: comercio@gmail.com"
+  >
+</div>
+
+<div class="campo">
+  <label for="horario">Horarios</label>
+
+  <input
+    type="text"
+    id="horario"
+    placeholder="Ej: Lun a Vie 8:30 a 19:00 - Sáb 8 a 13"
+  >
+</div>
+
+
+        <label for="descripcion">Descripción del comercio *</label>
+
+          <textarea
+            id="descripcion"
+            placeholder="Ej: Venta de sanitarios, ferretería, herramientas y materiales para la construcción..."
+            required
+          ></textarea>
+        </div>
+
+
+        <div class="aceptacion">
+
+          <input
+            type="checkbox"
+            id="acepto"
+            required
+          >
+
+          <label for="acepto">
+            Confirmo que los datos ingresados son correctos y acepto
+            que Servicios 365 los revise antes de publicar mi perfil.
+          </label>
+
+        </div>
+
+
+        <button
+          type="submit"
+          class="boton"
+          id="btnEnviar"
+        >
+          Enviar solicitud
+        </button>
+
+
+        <div
+          id="mensaje"
+          class="mensaje"
+        ></div>
+
+      </form>
+
+
+      <a
+        href="tecnicos.html"
+        class="volver"
+      >
+        ← Volver a buscar técnicos
+      </a>
+
+    </section>
+
+  </main>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+
+    const SUPABASE_URL =
+      "https://frbnlqihbxnesdbmduia.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_iSyhMVlbPHgIiDhkaz2zuA_B9oEzfvz";
+
+    const clienteSupabase =
+      supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
+    async function cargarCategorias() {
+
+  const selectCategoria =
+    document.getElementById("categoria");
+
+  const { data, error } =
+    await clienteSupabase
+      .from("categorias_comercios")
+      .select("nombre")
+      .eq("activo", true)
+      .order("nombre", { ascending: true });
+
+  if (error) {
+    console.error(error);
+
+    selectCategoria.innerHTML =
+      '<option value="">Error al cargar categorías</option>';
+
+    return;
+  }
+
+  selectCategoria.innerHTML =
+    '<option value="">Seleccionar categoría</option>';
+
+  data.forEach((categoria) => {
+
+    const opcion =
+      document.createElement("option");
+
+    opcion.value = categoria.nombre;
+    opcion.textContent = categoria.nombre;
+
+    selectCategoria.appendChild(opcion);
+
+  });
+}
+
+cargarCategorias();
+
+    const formulario =
+      document.getElementById("formTecnico");
+
+    const mensaje =
+      document.getElementById("mensaje");
+
+    const boton =
+      document.getElementById("btnEnviar");
+
+
+    formulario.addEventListener(
+      "submit",
+      async function(event) {
+
+        event.preventDefault();
+
+        mensaje.className = "mensaje";
+        mensaje.textContent = "";
+
+        boton.disabled = true;
+        boton.textContent = "Enviando...";
+
+
+        const nombreComercial =
+  document.getElementById("nombre")
+  .value
+  .trim();
+
+const categoria =
+  document.getElementById("categoria")
+  .value;
+
+const localidad =
+  document.getElementById("localidad")
+  .value
+  .trim();
+
+const direccion =
+  document.getElementById("direccion")
+  .value
+  .trim();
+
+const whatsapp =
+  document.getElementById("whatsapp")
+  .value
+  .trim();
+
+const telefono =
+  document.getElementById("telefono")
+  .value
+  .trim();
+
+const email =
+  document.getElementById("email")
+  .value
+  .trim();
+
+const horario =
+  document.getElementById("horario")
+  .value
+  .trim();
+
+const descripcion =
+  document.getElementById("descripcion")
+  .value
+  .trim();
+
+        const { error } =
+  await clienteSupabase
+    .from("solicitudes_comercios")
+    .insert([
+      {
+        nombre_comercial: nombreComercial,
+        categoria: categoria,
+        localidad: localidad,
+        direccion: direccion,
+        whatsapp: whatsapp,
+        telefono: telefono || null,
+        email: email || null,
+        horario: horario || null,
+        descripcion: descripcion,
+        estado: "pendiente"
+      }
+    ]);
+
+        if (error) {
+
+          console.error(error);
+
+          mensaje.className =
+            "mensaje error";
+
+          mensaje.textContent =
+            "No pudimos enviar la solicitud. Intentá nuevamente.";
+
+        } else {
+
+          mensaje.className =
+            "mensaje ok";
+
+          mensaje.innerHTML =
+            "<strong>✅ Solicitud recibida.</strong><br>" +
+            "Servicios 365 revisará los datos antes de publicar tu comercio.";
+            
+          formulario.reset();
+        }
+
+
+        boton.disabled = false;
+        boton.textContent = "Enviar solicitud";
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
