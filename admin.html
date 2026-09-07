@@ -1138,6 +1138,71 @@ async function aprobarTecnico(id){
   await cargarSolicitudesTecnicos();
 }
 
+async function aprobarComercio(id){
+
+  if(!confirm("¿Aprobar y publicar este comercio?")){
+    return;
+  }
+
+  const { data: solicitud, error: errorSolicitud } =
+    await clienteSupabase
+      .from("solicitudes_comercios")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+  if(errorSolicitud){
+    console.error(errorSolicitud);
+    alert("No se pudo leer la solicitud del comercio.");
+    return;
+  }
+
+  if(solicitud.estado !== "pendiente"){
+    alert("Esta solicitud ya fue procesada.");
+    return;
+  }
+
+  const { error: errorComercio } =
+    await clienteSupabase
+      .from("comercios")
+      .insert([{
+        nombre_comercial: solicitud.nombre_comercial,
+        categoria: solicitud.categoria,
+        localidad: solicitud.localidad,
+        direccion: solicitud.direccion || null,
+        telefono: solicitud.telefono || null,
+        whatsapp: solicitud.whatsapp,
+        email: solicitud.email || null,
+        horario: solicitud.horario || null,
+        descripcion: solicitud.descripcion || null,
+        activo: true,
+        destacado: false,
+        plan: "gratis"
+      }]);
+
+  if(errorComercio){
+    console.error(errorComercio);
+    alert("No se pudo publicar el comercio.");
+    return;
+  }
+
+  const { error: errorEstado } =
+    await clienteSupabase
+      .from("solicitudes_comercios")
+      .update({ estado: "aprobado" })
+      .eq("id", id);
+
+  if(errorEstado){
+    console.error(errorEstado);
+    alert("El comercio se publicó, pero no se pudo actualizar la solicitud.");
+    return;
+  }
+
+  alert("✅ Comercio aprobado y publicado.");
+
+  await cargarSolicitudesComercios();
+}
+    
 async function rechazarComercio(id){
 
   if(!confirm("¿Querés rechazar esta solicitud de comercio?")){
