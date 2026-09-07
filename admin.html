@@ -738,6 +738,131 @@ async function cargarSolicitudesTecnicos(){
 
   mostrarSolicitudesTecnicos(data || []);
 }
+
+async function cargarSolicitudesComercios(){
+
+  const tabla =
+    document.getElementById("tablaComerciosPendientes");
+
+  if(!tabla) return;
+
+  tabla.innerHTML = `
+    <tr>
+      <td colspan="6">Cargando comercios...</td>
+    </tr>
+  `;
+
+  const { data, error } =
+    await clienteSupabase
+      
+      .from("solicitudes_comercios")
+      .select("*")
+      .eq("estado", "pendiente")
+      .order("created_at", { ascending: false });
+
+  if(error){
+
+    console.error(error);
+
+    tabla.innerHTML = `
+      <tr>
+        <td colspan="6">
+          No se pudieron cargar las solicitudes de comercios.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  mostrarSolicitudesComercios(data || []);
+}
+
+function mostrarSolicitudesComercios(datos){
+
+  const tabla =
+    document.getElementById("tablaComerciosPendientes");
+
+  if(!tabla) return;
+
+  tabla.innerHTML = "";
+
+  if(datos.length === 0){
+
+    tabla.innerHTML = `
+      <tr>
+        <td colspan="6">
+          No hay solicitudes de comercios pendientes.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  datos.forEach(c => {
+
+    const whatsapp =
+      String(c.whatsapp || "").replace(/\D/g, "");
+
+    const fila = document.createElement("tr");
+
+    fila.innerHTML = `
+      <td>
+        <strong>${c.nombre_comercial || "-"}</strong>
+      </td>
+
+      <td>
+        ${c.categoria || "-"}
+      </td>
+
+      <td>
+        ${c.localidad || "-"}
+      </td>
+
+      <td>
+        ${
+          whatsapp
+            ? `<a href="https://wa.me/${whatsapp}" target="_blank">
+                 ${c.whatsapp}
+               </a>`
+            : "-"
+        }
+      </td>
+
+      <td>
+        ${c.estado || "pendiente"}
+      </td>
+
+      <td>
+
+        <button
+          onclick="aprobarComercio(${c.id})"
+          style="background:#16a34a;color:white;border:none;padding:8px 12px;border-radius:7px;cursor:pointer;margin:2px;">
+          ✅ Aprobar
+        </button>
+
+        <button
+          onclick="rechazarComercio(${c.id})"
+          style="background:#dc2626;color:white;border:none;padding:8px 12px;border-radius:7px;cursor:pointer;margin:2px;">
+          ❌ Rechazar
+        </button>
+
+        <button
+          onclick="eliminarComercio(${c.id})"
+          style="background:#555;color:white;border:none;padding:8px 12px;border-radius:7px;cursor:pointer;margin:2px;">
+          🗑 Eliminar
+        </button>
+
+      </td>
+    `;
+
+    tabla.appendChild(fila);
+
+  });
+
+}
+
 async function cargarTecnicosActivos(){
 
   const tabla = document.getElementById("tablaTecnicosActivos");
@@ -980,6 +1105,54 @@ async function aprobarTecnico(id){
 
   await cargarSolicitudesTecnicos();
 }
+
+async function rechazarComercio(id){
+
+  if(!confirm("¿Querés rechazar esta solicitud de comercio?")){
+    return;
+  }
+
+  const { error } =
+    await clienteSupabase
+      .from("solicitudes_comercios")
+      .update({ estado: "rechazado" })
+      .eq("id", id);
+
+  if(error){
+    console.error(error);
+    alert("No se pudo rechazar la solicitud.");
+    return;
+  }
+
+  alert("❌ Solicitud de comercio rechazada.");
+
+  await cargarSolicitudesComercios();
+}
+
+
+async function eliminarComercio(id){
+
+  if(!confirm("¿Seguro que querés eliminar esta solicitud de comercio?")){
+    return;
+  }
+
+  const { error } =
+    await clienteSupabase
+      .from("solicitudes_comercios")
+      .delete()
+      .eq("id", id);
+
+  if(error){
+    console.error(error);
+    alert("No se pudo eliminar la solicitud.");
+    return;
+  }
+
+  alert("🗑 Solicitud eliminada.");
+
+  await cargarSolicitudesComercios();
+}
+    
 async function rechazarTecnico(id)
 {
 
