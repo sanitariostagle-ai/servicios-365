@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Encontrar comercios | Servicios 365</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    margin:0;
+    background:#f4f7fb;
+    color:#172033;
+}
+
+/* CABECERA */
+
+.hero{
+    background:linear-gradient(135deg,#063c98,#1224c4);
+    color:white;
+    padding:35px 25px;
+}
+
+.hero-contenido{
+    max-width:1150px;
+    margin:auto;
+}
+
+.marca{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:12px;
+}
+
+.hero h1{
+    margin:0;
+    font-size:38px;
+}
+
+.hero p{
+    margin:8px 0 0;
+    opacity:.9;
+    font-size:17px;
+}
+
+/* CONTENIDO */
+
+.contenedor{
+    max-width:1150px;
+    margin:auto;
+    padding:25px 18px 50px;
+}
+
+/* BUSCADOR */
+
+.buscador{
+    background:white;
+    border-radius:18px;
+    padding:24px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+    margin-top:-5px;
+}
+
+.buscador h2{
+    margin-top:0;
+}
+
+.filtros{
+    display:grid;
+    grid-template-columns:1fr 1fr 1.4fr auto;
+    gap:12px;
+}
+
+select,
+input{
+    width:100%;
+    padding:14px;
+    border:1px solid #d4dae5;
+    border-radius:10px;
+    font-size:15px;
+    background:white;
+}
+
+.btn-buscar{
+    border:none;
+    padding:14px 24px;
+    border-radius:10px;
+    background:#1235d1;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.btn-buscar:hover{
+    opacity:.9;
+}
+
+/* RESULTADOS */
+
+.titulo-resultados{
+    margin:32px 0 18px;
+}
+
+.resultados{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+}
+
+/* TARJETAS */
+
+.comercio{
+    background:white;
+    border-radius:17px;
+    padding:22px;
+    box-shadow:0 4px 17px rgba(0,0,0,.07);
+    border:1px solid #edf0f5;
+}
+
+.encabezado-comercio{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+}
+
+.icono-comercio{
+    width:55px;
+    height:55px;
+    border-radius:14px;
+    background:#fff1e8;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    flex-shrink:0;
+}
+
+.nombre{
+    font-size:20px;
+    font-weight:bold;
+}
+
+.categoria{
+    color:#1235d1;
+    font-weight:bold;
+    margin-top:4px;
+}
+
+.destacado{
+    display:inline-block;
+    background:#fff3c4;
+    color:#8b6500;
+    padding:5px 9px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:bold;
+    margin-top:8px;
+}
+
+.detalles{
+    margin-top:17px;
+    line-height:1.6;
+    color:#566074;
+}
+
+.descripcion{
+    margin-top:10px;
+}
+
+.botones{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:18px;
+}
+
+.btn{
+    display:block;
+    text-align:center;
+    text-decoration:none;
+    border-radius:9px;
+    padding:12px;
+    font-weight:bold;
+}
+
+.whatsapp{
+    background:#25D366;
+    color:white;
+}
+
+.llamar{
+    background:#edf1ff;
+    color:#1730a8;
+}
+
+/* VACÍO */
+
+.vacio{
+    grid-column:1/-1;
+    background:white;
+    padding:45px 20px;
+    border-radius:17px;
+    text-align:center;
+    color:#596579;
+}
+
+.vacio .icono{
+    font-size:40px;
+}
+
+/* CTA */
+
+.registro{
+    margin-top:35px;
+    background:linear-gradient(135deg,#082bb0,#152bcf);
+    color:white;
+    border-radius:17px;
+    padding:25px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.registro h2{
+    margin:0 0 5px;
+}
+
+.registro p{
+    margin:0;
+}
+
+.registro a{
+    background:white;
+    color:#142db4;
+    padding:12px 20px;
+    border-radius:9px;
+    text-decoration:none;
+    font-weight:bold;
+    white-space:nowrap;
+}
+
+.volver{
+    text-align:center;
+    margin-top:28px;
+}
+
+.volver a{
+    text-decoration:none;
+    color:#1635ae;
+    font-weight:bold;
+}
+
+/* CELULAR */
+
+@media(max-width:850px){
+
+    .filtros{
+        grid-template-columns:1fr;
+    }
+
+    .resultados{
+        grid-template-columns:1fr;
+    }
+
+    .hero h1{
+        font-size:30px;
+    }
+
+    .registro{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .registro a{
+        width:100%;
+        text-align:center;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="hero">
+
+<div class="hero-contenido">
+
+<div class="marca">
+🏠 Servicios 365
+</div>
+
+<h1>📍 Encontrá comercios</h1>
+
+<p>
+Ferreterías, sanitarios, corralones, fletes y servicios cerca tuyo.
+</p>
+
+</div>
+
+</header>
+
+
+<main class="contenedor">
+
+<section class="buscador">
+
+<h2>¿Qué estás buscando?</h2>
+
+<div class="filtros">
+
+<select id="categoria">
+
+<option value="">
+Todas las categorías
+</option>
+
+</select>
+
+
+<select id="localidad">
+
+<option value="">
+Todas las zonas
+</option>
+
+</select>
+
+
+<input
+type="text"
+id="texto"
+placeholder="Nombre, producto o palabra clave"
+>
+
+
+<button
+class="btn-buscar"
+onclick="filtrarComercios()"
+>
+🔎 Buscar
+</button>
+
+</div>
+
+</section>
+
+
+<h2 class="titulo-resultados">
+Comercios disponibles
+</h2>
+
+<section
+id="resultados"
+class="resultados"
+>
+
+<div class="vacio">
+
+<div class="icono">
+⏳
+</div>
+
+<h3>
+Cargando comercios...
+</h3>
+
+</div>
+
+</section>
+
+
+<section class="registro">
+
+<div>
+
+<h2>
+¿Tenés un comercio?
+</h2>
+
+<p>
+Sumate a Servicios 365 y conectate con clientes de tu zona.
+</p>
+
+</div>
+
+<a href="registro-comercio.html">
+Quiero registrar mi comercio
+</a>
+
+</section>
+
+
+<div class="volver">
+
+<a href="index.html">
+← Volver a Servicios 365
+</a>
+
+</div>
+
+</main>
+
+
+<script>
+
+const SUPABASE_URL =
+"https://frbnlqihbxnesdbmduia.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_iSyhMVlbPHgIiDhkaz2zuA_B9oEzfvz";
+
+const clienteSupabase =
+supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+let comercios = [];
+
+
+/* ESCAPAR TEXTO */
+
+function escapar(valor){
+
+    if(
+        valor === null ||
+        valor === undefined
+    ){
+        return "";
+    }
+
+    return String(valor)
+
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+
+/* NORMALIZAR TEXTO */
+
+function normalizar(texto){
+
+    return String(texto || "")
+
+        .normalize("NFD")
+
+        .replace(
+            /[\u0300-\u036f]/g,
+            ""
+        )
+
+        .toLowerCase()
+
+        .trim();
+}
+
+
+/* WHATSAPP */
+
+function numeroWhatsApp(numero){
+
+    let tel =
+        String(numero || "")
+        .replace(/\D/g,"");
+
+    if(!tel){
+        return "";
+    }
+
+    if(tel.startsWith("549")){
+        return tel;
+    }
+
+    if(tel.startsWith("54")){
+        return "549" + tel.substring(2);
+    }
+
+    if(tel.startsWith("0")){
+        tel = tel.substring(1);
+    }
+
+    /*
+    Convierte números del tipo:
+    011 15 xxxx xxxx
+    */
+
+    if(tel.startsWith("1115")){
+        tel =
+            "11" +
+            tel.substring(4);
+    }
+
+    return "549" + tel;
+}
+
+
+/* CARGAR COMERCIOS */
+
+async function cargarComercios(){
+
+    const contenedor =
+        document.getElementById(
+            "resultados"
+        );
+
+    const { data, error } =
+        await clienteSupabase
+
+        .from("comercios")
+
+        .select("*")
+
+        .eq("activo",true)
+
+        .order(
+            "destacado",
+            { ascending:false }
+        )
+
+        .order(
+            "nombre_comercial",
+            { ascending:true }
+        );
+
+
+    if(error){
+
+        console.error(error);
+
+        contenedor.innerHTML = `
+
+        <div class="vacio">
+
+            <div class="icono">
+                ⚠️
+            </div>
+
+            <h3>
+                No pudimos cargar los comercios
+            </h3>
+
+            <p>
+                Intentá nuevamente en unos instantes.
+            </p>
+
+        </div>
+
+        `;
+
+        return;
+    }
+
+
+    comercios =
+        data || [];
+
+
+    cargarFiltros();
+
+
+    mostrarComercios(
+        comercios
+    );
+}
+
+
+/* CARGAR FILTROS */
+
+function cargarFiltros(){
+
+    const selectCategoria =
+        document.getElementById(
+            "categoria"
+        );
+
+    const selectLocalidad =
+        document.getElementById(
+            "localidad"
+        );
+
+
+    const categorias =
+        [
+            ...new Set(
+                comercios
+                .map(c => c.categoria)
+                .filter(Boolean)
+            )
+        ]
+        .sort();
+
+
+    const localidades =
+        [
+            ...new Set(
+                comercios
+                .map(c => c.localidad)
+                .filter(Boolean)
+            )
+        ]
+        .sort();
+
+
+    categorias.forEach(categoria => {
+
+        const opcion =
+            document.createElement(
+                "option"
+            );
+
+        opcion.value =
+            categoria;
+
+        opcion.textContent =
+            categoria;
+
+        selectCategoria.appendChild(
+            opcion
+        );
+    });
+
+
+    localidades.forEach(localidad => {
+
+        const opcion =
+            document.createElement(
+                "option"
+            );
+
+        opcion.value =
+            localidad;
+
+        opcion.textContent =
+            localidad;
+
+        selectLocalidad.appendChild(
+            opcion
+        );
+    });
+}
+
+
+/* MOSTRAR COMERCIOS */
+
+function mostrarComercios(lista){
+
+    const contenedor =
+        document.getElementById(
+            "resultados"
+        );
+
+
+    contenedor.innerHTML = "";
+
+
+    if(lista.length === 0){
+
+        contenedor.innerHTML = `
+
+        <div class="vacio">
+
+            <div class="icono">
+                🏪
+            </div>
+
+            <h3>
+                No encontramos comercios
+            </h3>
+
+            <p>
+                Probá con otra categoría,
+                localidad o palabra clave.
+            </p>
+
+        </div>
+
+        `;
+
+        return;
+    }
+
+
+    lista.forEach(c => {
+
+        const whatsapp =
+            numeroWhatsApp(
+                c.whatsapp
+            );
+
+
+        const telefono =
+            String(
+                c.telefono ||
+                c.whatsapp ||
+                ""
+            )
+            .replace(/\s/g,"");
+
+
+        const tarjeta =
+            document.createElement(
+                "article"
+            );
+
+
+        tarjeta.className =
+            "comercio";
+
+
+        tarjeta.innerHTML = `
+
+        <div class="encabezado-comercio">
+
+            <div class="icono-comercio">
+                🏪
+            </div>
+
+            <div>
+
+                <div class="nombre">
+
+                    ${escapar(
+                        c.nombre_comercial ||
+                        "Comercio"
+                    )}
+
+                </div>
+
+
+                <div class="categoria">
+
+                    ${escapar(
+                        c.categoria ||
+                        "Comercio"
+                    )}
+
+                </div>
+
+
+                ${
+                    c.destacado
+                    ?
+                    `
+                    <div class="destacado">
+                        ⭐ Comercio destacado
+                    </div>
+                    `
+                    :
+                    ""
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="detalles">
+
+            ${
+                c.localidad
+                ?
+                `
+                <div>
+                    📍 ${escapar(c.localidad)}
+                </div>
+                `
+                :
+                ""
+            }
+
+
+            ${
+                c.direccion
+                ?
+                `
+                <div>
+                    🏠 ${escapar(c.direccion)}
+                </div>
+                `
+                :
+                ""
+            }
+
+
+            ${
+                c.horario
+                ?
+                `
+                <div>
+                    🕒 ${escapar(c.horario)}
+                </div>
+                `
+                :
+                ""
+            }
+
+
+            ${
+                c.descripcion
+                ?
+                `
+                <div class="descripcion">
+                    ${escapar(c.descripcion)}
+                </div>
+                `
+                :
+                ""
+            }
+
+        </div>
+
+
+        <div class="botones">
+
+            ${
+                whatsapp
+                ?
+                `
+                <a
+                    class="btn whatsapp"
+                    href="https://wa.me/${whatsapp}"
+                    target="_blank"
+                >
+                    WhatsApp
+                </a>
+                `
+                :
+                `
+                <span></span>
+                `
+            }
+
+
+            ${
+                telefono
+                ?
+                `
+                <a
+                    class="btn llamar"
+                    href="tel:${telefono}"
+                >
+                    Llamar
+                </a>
+                `
+                :
+                ""
+            }
+
+        </div>
+
+        `;
+
+
+        contenedor.appendChild(
+            tarjeta
+        );
+
+    });
+}
+
+
+/* FILTRAR */
+
+function filtrarComercios(){
+
+    const categoria =
+        document.getElementById(
+            "categoria"
+        ).value;
+
+
+    const localidad =
+        document.getElementById(
+            "localidad"
+        ).value;
+
+
+    const texto =
+        normalizar(
+            document.getElementById(
+                "texto"
+            ).value
+        );
+
+
+    const filtrados =
+        comercios.filter(c => {
+
+
+            const coincideCategoria =
+                !categoria ||
+                c.categoria === categoria;
+
+
+            const coincideLocalidad =
+                !localidad ||
+                c.localidad === localidad;
+
+
+            const contenido =
+                normalizar(
+                    [
+                        c.nombre_comercial,
+                        c.categoria,
+                        c.localidad,
+                        c.direccion,
+                        c.descripcion
+                    ]
+                    .join(" ")
+                );
+
+
+            const coincideTexto =
+                !texto ||
+                contenido.includes(texto);
+
+
+            return (
+                coincideCategoria &&
+                coincideLocalidad &&
+                coincideTexto
+            );
+
+        });
+
+
+    mostrarComercios(
+        filtrados
+    );
+}
+
+
+/* BUSCAR AL PRESIONAR ENTER */
+
+document
+.getElementById("texto")
+.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Enter"){
+            filtrarComercios();
+        }
+
+    }
+);
+
+
+/* FILTRO AUTOMÁTICO */
+
+document
+.getElementById("categoria")
+.addEventListener(
+    "change",
+    filtrarComercios
+);
+
+
+document
+.getElementById("localidad")
+.addEventListener(
+    "change",
+    filtrarComercios
+);
+
+
+/* INICIO */
+
+cargarComercios();
+
+</script>
+
+</body>
+
+</html>
