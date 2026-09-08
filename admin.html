@@ -393,6 +393,46 @@ td{
   </div>
 
 </div>
+
+<div style="margin-top:35px;">
+
+    <h2>🏪 Comercios activos</h2>
+
+    <p>
+        Administrá los comercios publicados en Servicios 365.
+    </p>
+
+    <div style="overflow-x:auto;">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Comercio</th>
+                    <th>Categoría</th>
+                    <th>Localidad</th>
+                    <th>WhatsApp</th>
+                    <th>Plan</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaComerciosActivos">
+
+                <tr>
+                    <td colspan="7">
+                        Cargando comercios...
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
     
   <h2>🛠️ Técnicos activos</h2>
 
@@ -516,6 +556,7 @@ async function mostrarPanel(){
   await cargarSolicitudes();
   await cargarSolicitudesTecnicos();
   await cargarSolicitudesComercios();
+  await cargarComerciosActivos();
   await cargarTecnicosActivos();  
 }
 
@@ -895,6 +936,173 @@ function mostrarSolicitudesComercios(datos){
 
 }
 
+async function cargarComerciosActivos(){
+
+  const tabla =
+    document.getElementById("tablaComerciosActivos");
+
+  if(!tabla) return;
+
+  tabla.innerHTML = `
+    <tr>
+      <td colspan="7">
+        Cargando comercios...
+      </td>
+    </tr>
+  `;
+
+  const { data, error } =
+    await clienteSupabase
+      .from("comercios")
+      .select("*")
+      .order("created_at", {
+        ascending:false
+      });
+
+  if(error){
+
+    console.error(error);
+
+    tabla.innerHTML = `
+      <tr>
+        <td colspan="7">
+          No se pudieron cargar los comercios.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  if(!data || data.length === 0){
+
+    tabla.innerHTML = `
+      <tr>
+        <td colspan="7">
+          No hay comercios publicados.
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  tabla.innerHTML = "";
+
+  data.forEach(c => {
+
+    const telefono =
+      String(c.whatsapp || "")
+      .replace(/\D/g,"");
+
+    tabla.innerHTML += `
+      <tr>
+
+        <td>
+          ${escapar(c.nombre_comercial || "")}
+        </td>
+
+        <td>
+          ${escapar(c.categoria || "")}
+        </td>
+
+        <td>
+          ${escapar(c.localidad || "")}
+        </td>
+
+        <td>
+          ${
+            telefono
+            ? `
+              <a
+                href="https://wa.me/${telefono}"
+                target="_blank"
+              >
+                ${escapar(c.whatsapp || "")}
+              </a>
+            `
+            : "-"
+          }
+        </td>
+
+        <td>
+          ${escapar(c.plan || "gratis")}
+        </td>
+
+        <td>
+          ${c.activo ? "✅ Activo" : "⛔ Inactivo"}
+        </td>
+
+        <td>
+
+          <button
+            onclick="cambiarEstadoComercio(${c.id}, ${c.activo})"
+            style="
+              background:${c.activo ? "#dc2626" : "#16a34a"};
+              color:white;
+              border:none;
+              padding:8px 12px;
+              border-radius:7px;
+              cursor:pointer;
+            "
+          >
+
+            ${
+              c.activo
+              ? "⛔ Dar de baja"
+              : "✅ Reactivar"
+            }
+
+          </button>
+
+        </td>
+
+      </tr>
+    `;
+
+  });
+
+}
+
+async function cambiarEstadoComercio(id, estadoActual){
+
+  const nuevoEstado = !estadoActual;
+
+  const mensaje = nuevoEstado
+    ? "¿Querés reactivar este comercio?"
+    : "¿Querés dar de baja este comercio?";
+
+  if(!confirm(mensaje)){
+    return;
+  }
+
+  const { error } = await clienteSupabase
+    .from("comercios")
+    .update({
+      activo: nuevoEstado
+    })
+    .eq("id", id);
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "No se pudo cambiar el estado del comercio."
+    );
+
+    return;
+  }
+
+  alert(
+    nuevoEstado
+      ? "Comercio reactivado."
+      : "Comercio dado de baja."
+  );
+
+  await cargarComerciosActivos();
+}
+    
 async function cargarTecnicosActivos(){
 
   const tabla = document.getElementById("tablaTecnicosActivos");
