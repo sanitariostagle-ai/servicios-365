@@ -1159,6 +1159,13 @@ async function cargarTecnicosActivos(){
         <td>${t.verificado ? "✅ Verificado" : "⚪ No verificado"}</td>
 
 <td>
+
+<button
+  onclick="cambiarVerificacionTecnico(${t.id}, ${t.verificado})"
+  style="background:${t.verificado ? '#f59e0b' : '#16a34a'};color:white;border:none;padding:8px 12px;border-radius:7px;cursor:pointer;margin-right:5px;">
+  ${t.verificado ? "❌ Quitar verificación" : "✅ Verificar"}
+</button>
+
   <button
     onclick="cambiarEstadoTecnico(${t.id}, ${t.activo})"
     style="background:${t.activo ? "#dc2626" : "#16a34a"};color:white;border:none;padding:8px 12px;border-radius:7px;cursor:pointer;">
@@ -1199,6 +1206,38 @@ async function cargarTecnicosActivos(){
     nuevoEstado
       ? "Técnico reactivado."
       : "Técnico dado de baja."
+  );
+
+  await cargarTecnicosActivos();
+}
+
+async function cambiarVerificacionTecnico(id, verificadoActual){
+
+  const nuevoEstado = !verificadoActual;
+
+  const mensaje = nuevoEstado
+    ? "¿Querés verificar este técnico?"
+    : "¿Querés quitar la verificación de este técnico?";
+
+  if(!confirm(mensaje)){
+    return;
+  }
+
+  const { error } = await clienteSupabase
+    .from("tecnicos")
+    .update({ verificado: nuevoEstado })
+    .eq("id", id);
+
+  if(error){
+    console.error(error);
+    alert("No se pudo cambiar la verificación del técnico.");
+    return;
+  }
+
+  alert(
+    nuevoEstado
+      ? "Técnico verificado."
+      : "Verificación quitada."
   );
 
   await cargarTecnicosActivos();
