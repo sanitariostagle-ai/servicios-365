@@ -42,9 +42,8 @@ async function cargarTecnicos(){
         .from("tecnicos")
         .select("*")
         .eq("activo", true)
-        .order("nombre", {
-            ascending:true
-        });
+        .order("verificado", { ascending: false })
+        .order("nombre", { ascending: true });
 
     if(error){
 
