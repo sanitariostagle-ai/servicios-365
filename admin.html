@@ -1156,6 +1156,7 @@ async function cargarTecnicosActivos(){
         <td>${escapar(t.matricula || "Sin matrícula")}</td>
         <td>${escapar(t.servicios || "")}</td>
         <td>${t.activo ? "✅ Activo" : "⛔ Inactivo"}</td>
+        <td>${t.verificado ? "✅ Verificado" : "⚪ No verificado"}</td>
 
 <td>
   <button
