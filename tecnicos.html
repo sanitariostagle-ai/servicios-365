@@ -122,12 +122,18 @@ function mostrarTecnicos(lista){
                 <div class="avatar">🔧</div>
 
                 <div>
-                    <h3>${tecnico.nombre || ""}</h3>
+  <div class="nombre-tecnico">
+    <h3>${tecnico.nombre || ""}</h3>
 
-                    <div class="especialidad">
-                        ${tecnico.especialidad || ""}
-                    </div>
-                </div>
+    ${tecnico.verificado
+      ? `<span class="badge-verificado">✓ Verificado</span>`
+      : ""}
+  </div>
+
+  <div class="especialidad">
+    ${tecnico.especialidad || ""}
+  </div>
+</div>
 
             </div>
 
@@ -239,6 +245,28 @@ window.addEventListener("DOMContentLoaded", cargarTecnicos);
         
 </script>
 
+.nombre-tecnico {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nombre-tecnico h3 {
+  margin: 0;
+}
+
+.badge-verificado {
+  display: inline-block;
+  background: #e8f7ee;
+  color: #16803c;
+  border: 1px solid #b8e2c7;
+  border-radius: 20px;
+  padding: 4px 9px;
+  font-size: 12px;
+  font-weight: 700;
+}
+    
 <style>
 
 *{
