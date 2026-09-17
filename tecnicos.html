@@ -119,7 +119,12 @@ function mostrarTecnicos(lista){
 
             <div class="tecnico-superior">
 
-                <div class="avatar">🔧</div>
+                <div class="avatar">
+  ${tecnico.foto_url
+    ? `<img src="${tecnico.foto_url}" alt="${tecnico.nombre || "Técnico"}">`
+    : `🔧`
+  }
+</div>
 
                 <div>
   <div class="nombre-tecnico">
@@ -424,15 +429,23 @@ button:hover{
     margin-bottom:15px;
 }
 
-.avatar{
-    width:58px;
-    height:58px;
-    border-radius:15px;
-    background:#eef4ff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:30px;
+.avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 15px;
+  background: #eef4ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  overflow: hidden;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
 }
 
 .tecnico h3{
@@ -756,7 +769,12 @@ Probá con otra especialidad o zona.
 
             <div class="tecnico-superior">
 
-                <div class="avatar">🔧</div>
+               <div class="avatar">
+  ${tecnico.foto_url
+    ? `<img src="${tecnico.foto_url}" alt="${tecnico.nombre || "Técnico"}">`
+    : `🔧`
+  }
+</div>
 
                 <div>
                     <h3>${tecnico.nombre}</h3>
