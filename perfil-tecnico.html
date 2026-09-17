@@ -256,6 +256,15 @@ const SUPABASE_KEY =
 
         <div class="seccion">
 
+${tecnico.presentacion ? `
+  <div class="seccion">
+    <h3>👤 Sobre el profesional</h3>
+    <div class="dato">
+      ${tecnico.presentacion}
+    </div>
+  </div>
+` : ""}
+
           <h3>📍 Zona</h3>
 
           <div>
