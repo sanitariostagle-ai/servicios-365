@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Perfil profesional | Servicios 365</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #172033;
+    }
+
+    .contenedor {
+      max-width: 760px;
+      margin: 30px auto;
+      padding: 15px;
+    }
+
+    .volver {
+      display: inline-block;
+      margin-bottom: 18px;
+      color: #1d4ed8;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .perfil {
+      background: white;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    }
+
+    .encabezado {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 18px;
+      background: #e8efff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+    }
+
+    h1 {
+      margin: 0 0 5px;
+    }
+
+    .especialidad {
+      color: #1d4ed8;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .verificado {
+      display: inline-block;
+      margin: 7px 0;
+      color: #16803c;
+      font-weight: 700;
+    }
+
+    .seccion {
+      border-top: 1px solid #e5e7eb;
+      padding: 18px 0;
+    }
+
+    .seccion h3 {
+      margin: 0 0 10px;
+    }
+
+    .acciones {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .acciones a {
+      padding: 14px;
+      border-radius: 10px;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .whatsapp {
+      background: #22c55e;
+      color: white;
+    }
+
+    .llamar {
+      background: #1d4ed8;
+      color: white;
+    }
+
+    .error {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .acciones {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+  <a href="tecnicos.html" class="volver">
+    ← Volver a técnicos
+  </a>
+
+  <div id="perfil">
+    Cargando profesional...
+  </div>
+
+</div>
+
+<script>
+
+  const SUPABASE_URL =
+"https://frbnlqihbxnesdbmduia.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_iSyhMVlbPHgIiDhkaz2zuA_B9oEzfvz";
+
+  const clienteSupabase =
+    supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+  async function cargarPerfil() {
+
+    const contenedor =
+      document.getElementById("perfil");
+
+    const parametros =
+      new URLSearchParams(window.location.search);
+
+    const id = parametros.get("id");
+
+    if (!id) {
+      contenedor.innerHTML = `
+        <div class="error">
+          Profesional no encontrado.
+        </div>
+      `;
+      return;
+    }
+
+    const { data: tecnico, error } =
+      await clienteSupabase
+        .from("tecnicos")
+        .select("*")
+        .eq("id", id)
+        .eq("activo", true)
+        .maybeSingle();
+
+    if (error || !tecnico) {
+
+      console.error(error);
+
+      contenedor.innerHTML = `
+        <div class="error">
+          <h2>Profesional no encontrado</h2>
+          <p>Este perfil no está disponible.</p>
+        </div>
+      `;
+
+      return;
+    }
+
+    const whatsapp =
+      String(tecnico.whatsapp || "")
+      .replace(/\D/g, "");
+
+    const telefono =
+      String(
+        tecnico.telefono ||
+        tecnico.whatsapp ||
+        ""
+      ).replace(/\D/g, "");
+
+    let servicios =
+      tecnico.servicios ||
+      tecnico.descripcion ||
+      "Consultar servicios disponibles";
+
+    if (Array.isArray(servicios)) {
+      servicios = servicios.join(" · ");
+    }
+
+    contenedor.innerHTML = `
+
+      <article class="perfil">
+
+        <div class="encabezado">
+
+          <div class="avatar">
+            🔧
+          </div>
+
+          <div>
+
+            <h1>
+              ${tecnico.nombre || "Profesional"}
+            </h1>
+
+            ${tecnico.verificado
+              ? `<div class="verificado">✓ Verificado</div>`
+              : ""
+            }
+
+            <div class="especialidad">
+              ${tecnico.especialidad || ""}
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="seccion">
+
+          <h3>📍 Zona</h3>
+
+          <div>
+            ${tecnico.zona || "Consultar"}
+          </div>
+
+        </div>
+
+        <div class="seccion">
+
+          <h3>🛠 Servicios</h3>
+
+          <div>
+            ${servicios}
+          </div>
+
+        </div>
+
+        <div class="seccion">
+
+          <h3>📋 Matrícula</h3>
+
+          <div>
+            ${tecnico.matricula || "Sin matrícula informada"}
+          </div>
+
+        </div>
+
+        <div class="acciones">
+
+          ${whatsapp ? `
+            <a
+              class="whatsapp"
+              target="_blank"
+              href="https://wa.me/${whatsapp}?text=Hola%2C%20te%20contacto%20desde%20Servicios%20365">
+              WhatsApp
+            </a>
+          ` : ""}
+
+          ${telefono ? `
+            <a
+              class="llamar"
+              href="tel:${telefono}">
+              Llamar
+            </a>
+          ` : ""}
+
+        </div>
+
+      </article>
+    `;
+  }
+
+  cargarPerfil();
+
+</script>
+
+</body>
+</html>
