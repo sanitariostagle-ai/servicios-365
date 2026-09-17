@@ -265,6 +265,15 @@ ${tecnico.presentacion ? `
   </div>
 ` : ""}
 
+${tecnico.experiencia_anios !== null && tecnico.experiencia_anios !== undefined ? `
+  <div class="seccion">
+    <h3>🧰 Experiencia</h3>
+    <div class="dato">
+      ${tecnico.experiencia_anios} ${tecnico.experiencia_anios === 1 ? "año" : "años"}
+    </div>
+  </div>
+` : ""}
+
           <h3>📍 Zona</h3>
 
           <div>
