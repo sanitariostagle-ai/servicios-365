@@ -276,6 +276,15 @@ ${tecnico.experiencia_anios !== null && tecnico.experiencia_anios !== undefined 
 
           <h3>📍 Zona</h3>
 
+          ${tecnico.zonas_trabajo ? `
+  <div class="seccion">
+    <h3>🗺️ Zonas donde trabaja</h3>
+    <div class="dato">
+      ${tecnico.zonas_trabajo}
+    </div>
+  </div>
+` : ""}
+
           <div>
             ${tecnico.zona || "Consultar"}
           </div>
