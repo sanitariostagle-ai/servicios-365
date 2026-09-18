@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Trabajos disponibles | Servicios 365</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f3f6f9;
+      color: #1f2937;
+    }
+
+    header {
+      background: #0b3b60;
+      color: white;
+      padding: 22px 15px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 7px 0 0;
+      opacity: 0.9;
+    }
+
+    .contenedor {
+      width: 92%;
+      max-width: 750px;
+      margin: 25px auto;
+    }
+
+    .titulo {
+      margin-bottom: 18px;
+    }
+
+    .titulo h2 {
+      margin-bottom: 5px;
+    }
+
+    .trabajo {
+      background: white;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 20px;
+
+      box-shadow:
+        0 3px 12px rgba(0,0,0,0.10);
+    }
+
+    .estado {
+      display: inline-block;
+      background: #fff3cd;
+      color: #805b00;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .trabajo h3 {
+      font-size: 24px;
+      margin: 5px 0 18px;
+      color: #0b3b60;
+    }
+
+    .dato {
+      margin: 10px 0;
+      font-size: 17px;
+    }
+
+    .dato strong {
+      color: #374151;
+    }
+
+    .urgencia-normal {
+      color: #0b7a40;
+      font-weight: bold;
+    }
+
+    .boton-aceptar {
+      width: 100%;
+      margin-top: 20px;
+      border: none;
+      padding: 16px;
+      border-radius: 10px;
+
+      background: #16a34a;
+      color: white;
+
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .boton-aceptar:hover {
+      background: #12813c;
+    }
+
+    .volver {
+      display: block;
+      text-align: center;
+      margin-top: 25px;
+      text-decoration: none;
+      color: #0b3b60;
+      font-weight: bold;
+    }
+
+    .nota {
+      margin-top: 25px;
+      padding: 14px;
+      background: #e8f2f8;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    @media(max-width:600px) {
+
+      header h1 {
+        font-size: 23px;
+      }
+
+      .trabajo {
+        padding: 18px;
+      }
+
+      .trabajo h3 {
+        font-size: 21px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Servicios 365</h1>
+  <p>Soluciones Técnicas</p>
+</header>
+
+<main class="contenedor">
+
+  <div class="titulo">
+    <h2>🔧 Trabajos disponibles</h2>
+    <p>Solicitudes compatibles con tu perfil.</p>
+  </div>
+
+  <!-- TRABAJO DE PRUEBA -->
+
+  <div class="trabajo">
+
+    <span class="estado">
+      NUEVO TRABAJO
+    </span>
+
+    <h3>Plomería</h3>
+
+    <div class="dato">
+      📍 <strong>Localidad:</strong>
+      Lanús
+    </div>
+
+    <div class="dato">
+      🛠️ <strong>Problema:</strong>
+      Pérdida de agua
+    </div>
+
+    <div class="dato">
+      ⚡ <strong>Urgencia:</strong>
+      <span class="urgencia-normal">
+        Normal
+      </span>
+    </div>
+
+    <div class="dato">
+      📋 <strong>Solicitud:</strong>
+      S365-20260918-1114
+    </div>
+
+    <button
+      class="boton-aceptar"
+      type="button"
+      onclick="avisoPrueba()">
+
+      ✅ ACEPTAR TRABAJO
+
+    </button>
+
+  </div>
+
+  <div class="nota">
+    Esta es la primera versión de la pantalla del técnico.
+    En el próximo paso la conectaremos automáticamente
+    con las ofertas generadas por Servicios 365.
+  </div>
+
+  <a href="index.html" class="volver">
+    ← Volver a Servicios 365
+  </a>
+
+</main>
+
+<script>
+
+function avisoPrueba() {
+
+  alert(
+    "Botón funcionando correctamente.\n\n" +
+    "En el próximo paso lo conectaremos con Supabase."
+  );
+
+}
+
+</script>
+
+</body>
+</html>
