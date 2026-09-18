@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // Solo permitimos consultas GET
   if (req.method !== "GET") {
     return res.status(405).json({
       error: "Método no permitido"
@@ -8,20 +7,9 @@ export default async function handler(req, res) {
 
   const { token } = req.query;
 
-  // Validamos que venga un token
   if (!token || typeof token !== "string") {
     return res.status(400).json({
       error: "Falta el token de la oferta"
-    });
-  }
-
-  // Validación básica de UUID
-  const uuidRegex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-  if (!uuidRegex.test(token)) {
-    return res.status(400).json({
-      error: "Token inválido"
     });
   }
 
@@ -29,68 +17,98 @@ export default async function handler(req, res) {
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
-    console.error("Faltan variables de entorno de Supabase");
-
     return res.status(500).json({
       error: "Configuración del servidor incompleta"
     });
   }
 
-  try {
-    const select = [
-      "id",
-      "estado",
-      "created_at",
-      "solicitud_id",
-      "tecnico_id",
-      "solicitudes!inner(numero_solicitud,servicio,localidad,problema,urgencia)",
-      "tecnicos!inner(nombre,especialidad,zona)"
-    ].join(",");
+  const headers = {
+    apikey: supabaseKey,
+    Accept: "application/json"
+  };
 
-    const url =
+  try {
+
+    // 1. Buscar la oferta por token
+    const ofertaResp = await fetch(
       `${supabaseUrl}/rest/v1/ofertas_trabajo` +
       `?access_token=eq.${encodeURIComponent(token)}` +
-      `&select=${encodeURIComponent(select)}` +
-      `&limit=1`;
+      `&select=id,estado,created_at,solicitud_id,tecnico_id` +
+      `&limit=1`,
+      { headers }
+    );
 
-    const respuesta = await fetch(url, {
-      headers: {
-        apikey: supabaseKey,
-        Accept: "application/json"
-      }
-    });
-
-    if (!respuesta.ok) {
-      const detalle = await respuesta.text();
-
-      console.error(
-        "Error consultando Supabase:",
-        respuesta.status,
-        detalle
-      );
+    if (!ofertaResp.ok) {
+      const detalle = await ofertaResp.text();
+      console.error("Error oferta:", detalle);
 
       return res.status(500).json({
         error: "No se pudo consultar la oferta"
       });
     }
 
-    const datos = await respuesta.json();
+    const ofertas = await ofertaResp.json();
 
-    if (!Array.isArray(datos) || datos.length === 0) {
+    if (!ofertas.length) {
       return res.status(404).json({
         error: "Oferta no encontrada"
       });
     }
 
+    const oferta = ofertas[0];
+
+    // 2. Buscar la solicitud
+    const solicitudResp = await fetch(
+      `${supabaseUrl}/rest/v1/solicitudes` +
+      `?id=eq.${oferta.solicitud_id}` +
+      `&select=id,numero_solicitud,servicio,localidad,problema,urgencia,estado` +
+      `&limit=1`,
+      { headers }
+    );
+
+    if (!solicitudResp.ok) {
+      const detalle = await solicitudResp.text();
+      console.error("Error solicitud:", detalle);
+
+      return res.status(500).json({
+        error: "No se pudo consultar la solicitud"
+      });
+    }
+
+    const solicitudes = await solicitudResp.json();
+
+    // 3. Buscar el técnico
+    const tecnicoResp = await fetch(
+      `${supabaseUrl}/rest/v1/tecnicos` +
+      `?id=eq.${oferta.tecnico_id}` +
+      `&select=id,nombre,especialidad,zona` +
+      `&limit=1`,
+      { headers }
+    );
+
+    if (!tecnicoResp.ok) {
+      const detalle = await tecnicoResp.text();
+      console.error("Error técnico:", detalle);
+
+      return res.status(500).json({
+        error: "No se pudo consultar el técnico"
+      });
+    }
+
+    const tecnicos = await tecnicoResp.json();
+
     res.setHeader("Cache-Control", "no-store");
 
     return res.status(200).json({
       ok: true,
-      oferta: datos[0]
+      oferta,
+      solicitud: solicitudes[0] || null,
+      tecnico: tecnicos[0] || null
     });
 
   } catch (error) {
-    console.error("Error interno:", error);
+
+    console.error(error);
 
     return res.status(500).json({
       error: "Error interno del servidor"
