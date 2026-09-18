@@ -356,7 +356,265 @@
         grid-column:auto;
       }
     }
-  </style>
+
+        /* ==================================================
+   SERVICIOS 365 - NUEVA PORTADA TIPO APP
+   ================================================== */
+
+body{
+    margin:0 !important;
+    background:#f4f7fb !important;
+    font-family:Arial, Helvetica, sans-serif;
+    color:#102a56;
+}
+
+header{
+    background:#f4f7fb !important;
+    padding:0 !important;
+    min-height:auto !important;
+}
+
+/* CABECERA */
+
+.app-header{
+    width:100%;
+    max-width:520px;
+    margin:0 auto;
+    padding:10px 16px;
+    box-sizing:border-box;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:#ffffff;
+    border-bottom:1px solid #e7edf5;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.app-brand{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.header-icon{
+    width:42px;
+    height:42px;
+    border:0;
+    background:#f1f5fb;
+    border-radius:13px;
+    font-size:20px;
+    color:#0758bd;
+    cursor:pointer;
+}
+
+/* CONTENEDOR PRINCIPAL */
+
+.app-home{
+    width:100%;
+    max-width:520px;
+    margin:0 auto;
+    padding:24px 16px 110px;
+    box-sizing:border-box;
+    background:#f4f7fb;
+}
+
+/* SALUDO */
+
+.home-welcome{
+    margin-bottom:18px;
+}
+
+.home-welcome h1{
+    margin:0;
+    font-size:34px;
+    line-height:1;
+    color:#073b82;
+    font-weight:800;
+}
+
+.home-welcome p{
+    margin:8px 0 0;
+    font-size:16px;
+    line-height:1.4;
+    color:#54657d;
+}
+
+/* BUSCADOR */
+
+.home-search{
+    width:100%;
+    height:54px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:0 16px;
+    box-sizing:border-box;
+    background:#ffffff;
+    border:1px solid #e1e8f2;
+    border-radius:16px;
+    box-shadow:0 3px 12px rgba(20,50,90,.06);
+    margin-bottom:20px;
+}
+
+.home-search span{
+    font-size:20px;
+}
+
+.home-search input{
+    flex:1;
+    border:0;
+    outline:none;
+    background:transparent;
+    font-size:15px;
+    color:#213650;
+}
+
+/* BOTONES GRANDES */
+
+.home-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:28px;
+}
+
+.home-card{
+    min-height:145px;
+    padding:18px;
+    border:0;
+    border-radius:20px;
+    text-decoration:none;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:flex-start;
+    box-sizing:border-box;
+    cursor:pointer;
+    color:#ffffff;
+    box-shadow:0 8px 22px rgba(25,60,100,.12);
+    transition:.2s ease;
+    text-align:left;
+}
+
+.home-card:hover{
+    transform:translateY(-2px);
+}
+
+.home-card .card-icon{
+    font-size:34px;
+    margin-bottom:auto;
+}
+
+.home-card strong{
+    font-size:19px;
+    margin-top:12px;
+}
+
+.home-card small{
+    font-size:12px;
+    line-height:1.3;
+    margin-top:5px;
+    opacity:.95;
+}
+
+.card-blue{
+    background:linear-gradient(135deg,#0758bd,#1686eb);
+}
+
+.card-orange{
+    background:linear-gradient(135deg,#ff7200,#ff9b32);
+}
+
+.card-orange-light{
+    background:linear-gradient(135deg,#ff9533,#ffb45c);
+}
+
+.card-lightblue{
+    background:linear-gradient(135deg,#4f96ef,#75baff);
+}
+
+/* SERVICIOS MÁS BUSCADOS */
+
+.section-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+}
+
+.section-title h2{
+    margin:0;
+    font-size:20px;
+    color:#102a56;
+}
+
+.service-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+.service-item{
+    background:#ffffff;
+    min-height:90px;
+    border-radius:16px;
+    text-decoration:none;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:7px;
+    padding:10px 5px;
+    box-sizing:border-box;
+    box-shadow:0 3px 12px rgba(20,50,90,.07);
+    border:1px solid #edf1f6;
+}
+
+.service-item span{
+    font-size:28px;
+}
+
+.service-item small{
+    font-size:11px;
+    font-weight:700;
+    text-align:center;
+    color:#173b6b;
+}
+
+/* CELULAR */
+
+@media(max-width:600px){
+
+    .app-home{
+        padding:20px 14px 100px;
+    }
+
+    .home-actions{
+        gap:10px;
+    }
+
+    .home-card{
+        min-height:135px;
+        padding:15px;
+    }
+
+    .home-card strong{
+        font-size:17px;
+    }
+
+    .service-grid{
+        gap:7px;
+    }
+
+    .service-item{
+        min-height:82px;
+    }
+}
+        
+    </style>
 </head>
 
 <body>
@@ -381,35 +639,81 @@
 
 </nav>
 
-  <div class="hero">
+  <section class="app-home">
 
-    <div>
-      <div class="tag">Hogar · Edificios · Oficinas · Empresas</div>
-
-      <h1>Soluciones técnicas, todos los días del año.</h1>
-
-      <p>
-        Solicitá un servicio, describí el problema y coordiná
-        una visita técnica de manera simple y rápida.
-      </p>
+    <div class="home-welcome">
+        <h1>¡Hola!</h1>
+        <p>Encontrá profesionales de confianza para tu hogar o negocio.</p>
     </div>
 
-    <div class="hero-box">
-      <h2>¿Qué necesitás resolver?</h2>
-      <p>Completá tu solicitud y recibiremos todos los datos por WhatsApp.</p>
-
-      <ul>
-        <li>Plomería</li>
-        <li>Electricidad</li>
-        <li>Gas y calefacción</li>
-        <li>Bombas y tanques</li>
-        <li>Mantenimiento edilicio</li>
-        <li>Reparaciones generales</li>
-      </ul>
+    <div class="home-search">
+        <span>🔍</span>
+        <input type="text" placeholder="Buscar técnico o servicio...">
     </div>
 
-  </div>
+    <div class="home-actions">
 
+        <a href="tecnicos.html" class="home-card card-blue">
+            <span class="card-icon">👷</span>
+            <strong>Técnicos</strong>
+            <small>Profesionales verificados</small>
+        </a>
+
+        <a href="comercios.html" class="home-card card-orange">
+            <span class="card-icon">🏪</span>
+            <strong>Comercios</strong>
+            <small>Insumos y servicios</small>
+        </a>
+
+        <button
+            class="home-card card-orange-light"
+            onclick="document.querySelector('form')?.scrollIntoView({behavior:'smooth'})">
+            <span class="card-icon">📋</span>
+            <strong>Pedir servicio</strong>
+            <small>Contanos qué necesitás</small>
+        </button>
+
+        <a href="registro-comercio.html" class="home-card card-lightblue">
+            <span class="card-icon">📈</span>
+            <strong>Promocionar mi negocio</strong>
+            <small>Llegá a más clientes</small>
+        </a>
+
+    </div>
+
+    <div class="popular-services">
+
+        <div class="section-title">
+            <h2>Servicios más buscados</h2>
+        </div>
+
+        <div class="service-grid">
+
+            <a href="tecnicos.html" class="service-item">
+                <span>🔧</span>
+                <small>Plomería</small>
+            </a>
+
+            <a href="tecnicos.html" class="service-item">
+                <span>⚡</span>
+                <small>Electricidad</small>
+            </a>
+
+            <a href="tecnicos.html" class="service-item">
+                <span>🔥</span>
+                <small>Calefacción</small>
+            </a>
+
+            <a href="tecnicos.html" class="service-item">
+                <span>❄️</span>
+                <small>Aire acondicionado</small>
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
 </header>
 
 
