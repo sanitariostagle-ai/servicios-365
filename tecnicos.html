@@ -665,6 +665,41 @@ button:hover{
         padding:0 10px !important;
     }
 }
+
+/* AJUSTE FINAL FILTROS TECNICOS */
+
+section.buscador .filtros{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+    gap:12px !important;
+    width:100% !important;
+    align-items:end !important;
+}
+
+section.buscador .filtro-campo{
+    width:100% !important;
+    min-width:0 !important;
+}
+
+section.buscador .filtro-select{
+    width:100% !important;
+    height:52px !important;
+    box-sizing:border-box !important;
+}
+
+section.buscador{
+    max-width:720px !important;
+    margin:0 auto 22px !important;
+    padding:22px !important;
+    box-sizing:border-box !important;
+}
+
+@media(max-width:600px){
+    section.buscador .filtros{
+        grid-template-columns:1fr 1fr !important;
+        gap:8px !important;
+    }
+}
     
 </style>
     
@@ -789,29 +824,7 @@ button:hover{
 
 </select>
 
-<div class="home-welcome"
-     style="display:block !important; margin:22px 0 18px !important; padding:0 !important;">
 
-    <h1 style="
-        display:block !important;
-        margin:0 0 8px !important;
-        color:#073b82 !important;
-        font-size:34px !important;
-        line-height:1.05 !important;
-        font-weight:800 !important;">
-        ¡Hola!
-    </h1>
-
-    <p style="
-        display:block !important;
-        margin:0 !important;
-        color:#52657d !important;
-        font-size:16px !important;
-        line-height:1.4 !important;">
-        Encontrá profesionales de confianza para tu hogar o negocio.
-    </p>
-
-</div>
 
 <div class="home-search"
      style="
