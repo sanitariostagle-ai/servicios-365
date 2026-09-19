@@ -626,18 +626,63 @@ button:hover{
 
 <header>
 
-<nav>
+<nav style="
+    width:100%;
+    max-width:520px;
+    margin:0 auto;
+    padding:14px 16px;
+    box-sizing:border-box;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:#ffffff;
+    border-bottom:1px solid #e6ebf2;
+">
 
-<div class="marca">
-    <div class="logo">365</div>
+    <a href="index.html"
+       style="
+           width:42px;
+           height:42px;
+           display:flex;
+           align-items:center;
+           justify-content:center;
+           text-decoration:none;
+           background:#f1f5fb;
+           color:#0758bd;
+           border-radius:13px;
+           font-size:26px;
+           font-weight:bold;">
+        ←
+    </a>
 
-    <div>
-        <h3>Servicios 365</h3>
-        <small>por Sanitarios Tagle</small>
+    <div style="
+        flex:1;
+        margin-left:14px;
+        display:flex;
+        flex-direction:column;
+    ">
+        <strong style="
+            font-size:20px;
+            color:#102a56;
+        ">
+            Técnicos
+        </strong>
+
+        <small style="
+            font-size:12px;
+            color:#718096;
+        ">
+            Encontrá el profesional que necesitás
+        </small>
     </div>
-</div>
 
-<a href="index.html" class="volver">← Volver al inicio</a>
+    <img src="PORTADA%20SERVICIOS365.png"
+         alt="Servicios 365"
+         style="
+             width:78px;
+             height:auto;
+             display:block;
+         ">
 
 </nav>
 
@@ -688,16 +733,60 @@ Buscá profesionales por especialidad y zona.
 
 </select>
 
-<input
-type="text"
-id="texto"
-placeholder="Nombre o palabra clave"
->
+<div class="home-welcome"
+     style="display:block !important; margin:22px 0 18px !important; padding:0 !important;">
 
-<button onclick="buscarTecnicos()">
-🔎 Buscar
-</button>
+    <h1 style="
+        display:block !important;
+        margin:0 0 8px !important;
+        color:#073b82 !important;
+        font-size:34px !important;
+        line-height:1.05 !important;
+        font-weight:800 !important;">
+        ¡Hola!
+    </h1>
 
+    <p style="
+        display:block !important;
+        margin:0 !important;
+        color:#52657d !important;
+        font-size:16px !important;
+        line-height:1.4 !important;">
+        Encontrá profesionales de confianza para tu hogar o negocio.
+    </p>
+
+</div>
+
+<div class="home-search"
+     style="
+        display:flex !important;
+        align-items:center !important;
+        width:100% !important;
+        height:54px !important;
+        margin:0 0 20px !important;
+        padding:0 16px !important;
+        box-sizing:border-box !important;
+        background:#ffffff !important;
+        border:1px solid #dfe7f1 !important;
+        border-radius:16px !important;
+        box-shadow:0 4px 14px rgba(20,50,90,.08) !important;">
+
+    <span style="font-size:20px; margin-right:10px;">🔍</span>
+
+    <input
+        type="text"
+        placeholder="Buscar técnico o servicio..."
+        style="
+            display:block !important;
+            flex:1 !important;
+            width:auto !important;
+            border:0 !important;
+            outline:none !important;
+            background:transparent !important;
+            color:#173b6b !important;
+            font-size:15px !important;
+            padding:0 !important;">
+</div>
 </div>
 
 </section>
