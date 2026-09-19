@@ -613,6 +613,52 @@ header{
         min-height:82px;
     }
 }
+
+/* ===== NAVEGACION INFERIOR SERVICIOS 365 ===== */
+
+.bottom-nav{
+    position:fixed;
+    left:50%;
+    bottom:0;
+    transform:translateX(-50%);
+    width:100%;
+    max-width:520px;
+    height:68px;
+    background:#ffffff;
+    display:flex;
+    align-items:center;
+    justify-content:space-around;
+    border-top:1px solid #e4eaf2;
+    box-shadow:0 -4px 18px rgba(20,50,90,.08);
+    z-index:2000;
+    padding-bottom:env(safe-area-inset-bottom);
+}
+
+.bottom-item{
+    flex:1;
+    height:100%;
+    text-decoration:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:3px;
+    color:#718096;
+}
+
+.bottom-item span{
+    font-size:22px;
+    line-height:1;
+}
+
+.bottom-item small{
+    font-size:11px;
+    font-weight:600;
+}
+
+.bottom-item.active{
+    color:#0758bd;
+}
         
     </style>
 </head>
@@ -1096,5 +1142,34 @@ window.location.href = url;
 
 </script>
 
+<nav class="bottom-nav">
+
+    <a href="index.html" class="bottom-item active">
+        <span>🏠</span>
+        <small>Inicio</small>
+    </a>
+
+    <a href="tecnicos.html" class="bottom-item">
+        <span>🔍</span>
+        <small>Buscar</small>
+    </a>
+
+    <a href="trabajos.html" class="bottom-item">
+        <span>📋</span>
+        <small>Pedidos</small>
+    </a>
+
+    <a href="#" class="bottom-item">
+        <span>♡</span>
+        <small>Favoritos</small>
+    </a>
+
+    <a href="perfil-tecnico.html" class="bottom-item">
+        <span>👤</span>
+        <small>Perfil</small>
+    </a>
+
+</nav>
+    
 </body>
 </html>
