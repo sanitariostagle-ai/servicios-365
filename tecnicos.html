@@ -700,6 +700,40 @@ section.buscador{
         gap:8px !important;
     }
 }
+
+@media (max-width: 600px) {
+  .buscador {
+    width: calc(100% - 24px);
+    max-width: none;
+    margin-left: 12px;
+    margin-right: 12px;
+    padding: 26px 18px;
+    box-sizing: border-box;
+  }
+
+  .filtros {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: 14px;
+  }
+
+  .filtro-campo,
+  .filtros > div {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0;
+  }
+
+  .filtro-select,
+  .filtros select,
+  .filtros input,
+  .filtros button {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box;
+  }
+}
     
 </style>
     
@@ -790,22 +824,17 @@ section.buscador{
 <div class="filtros">
 
 <div class="filtro-campo">
-    <label for="especialidad">Rubro</label>
-    <select id="especialidad" class="filtro-select">
+  <label for="especialidad">Rubro</label>
 
+  <select id="especialidad" class="filtro-select">
+    <option value="">Todas las especialidades</option>
+    <option>Plomería</option>
+    <option>Electricidad</option>
+    <option>Gas</option>
+    <option>Calefacción</option>
+    <option>Aire acondicionado</option>
+  </select>
 </div>
-        
-<option value="">Todas las especialidades</option>
-<option>Plomería</option>
-<option>Electricidad</option>
-<option>Gas</option>
-<option>Calefacción</option>
-<option>Aire acondicionado</option>
-<option>Bombas y tanques</option>
-<option>Mantenimiento edilicio</option>
-<option>Reparaciones generales</option>
-
-</select>
 
 <div class="filtro-campo">
     <label for="zona">Zona</label>
