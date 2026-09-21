@@ -267,24 +267,29 @@
     form{
       display:grid;
       grid-template-columns:1fr 1fr;
-      gap:18px;
+      gap:12px;
     }
 
     .field{
       display:flex;
       flex-direction:column;
-      gap:7px;
+      gap:12px;
     }
 
     .full{
       grid-column:1/-1;
     }
 
-    label{
-      font-weight:bold;
-      font-size:14px;
-    }
-
+   label {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left !important;
+  padding-left: 4px;
+  margin: 0;
+  font-weight: bold;
+  font-size: 14px;
+}
     input,select,textarea{
       width:100%;
       padding:14px;
