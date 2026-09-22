@@ -214,8 +214,58 @@
 
 <script>
 
-function avisoPrueba() {
+async function avisoPrueba() {
+  const boton = document.querySelector(
+    'button[onclick="avisoPrueba()"]'
+  );
 
+  const token = new URLSearchParams(
+    window.location.search
+  ).get("token");
+
+  if (!token) {
+    alert("Este enlace no contiene una oferta válida.");
+    return;
+  }
+
+  try {
+    if (boton) {
+      boton.disabled = true;
+      boton.textContent = "Procesando...";
+    }
+
+    const respuesta = await fetch("/api/aceptar-trabajo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ token })
+    });
+
+    const resultado = await respuesta.json();
+
+    if (!respuesta.ok) {
+      throw new Error(
+        resultado.error || "No se pudo aceptar el trabajo"
+      );
+    }
+
+    alert("Trabajo aceptado correctamente.");
+
+    if (boton) {
+      boton.textContent = "✅ TRABAJO ACEPTADO";
+      boton.style.background = "#15803d";
+    }
+
+  } catch (error) {
+    alert(error.message);
+
+    if (boton) {
+      boton.disabled = false;
+      boton.textContent = "✅ ACEPTAR TRABAJO";
+    }
+  }
+}
   alert(
     "Botón funcionando correctamente.\n\n" +
     "En el próximo paso lo conectaremos con Supabase."
