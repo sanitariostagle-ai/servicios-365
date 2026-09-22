@@ -39,8 +39,11 @@ export default async function handler(req, res) {
     );
 
     if (!ofertaResp.ok) {
-      throw new Error("No se pudo consultar la oferta");
-    }
+  const detalle = await ofertaResp.text();
+  console.error("DETALLE SUPABASE:", ofertaResp.status, detalle);
+
+  throw new Error("No se pudo consultar la oferta");
+}
 
     const ofertas = await ofertaResp.json();
     const oferta = ofertas[0];
