@@ -734,6 +734,42 @@ section.buscador{
     box-sizing: border-box;
   }
 }
+
+/* CORRECCIÓN FINAL PARA CELULAR */
+@media screen and (max-width: 700px) {
+  section.buscador {
+    width: calc(100% - 32px) !important;
+    padding: 24px 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  section.buscador .filtros {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 14px !important;
+    width: 100% !important;
+  }
+
+  section.buscador .filtros > * {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  section.buscador .filtro-select,
+  section.buscador select,
+  section.buscador input,
+  section.buscador button {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+}
     
 </style>
     
