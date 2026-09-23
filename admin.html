@@ -1036,6 +1036,21 @@ async function cargarComerciosActivos(){
         <td>
 
           <button
+  onclick="editarComercio(${c.id})"
+  style="
+    background:#f59e0b;
+    color:white;
+    border:none;
+    padding:8px 12px;
+    border-radius:7px;
+    cursor:pointer;
+    margin-right:6px;
+  "
+>
+  ✏️ Editar
+</button>
+          
+          <button
             onclick="cambiarEstadoComercio(${c.id}, ${c.activo})"
             style="
               background:${c.activo ? "#dc2626" : "#16a34a"};
@@ -1064,6 +1079,81 @@ async function cargarComerciosActivos(){
 
 }
 
+async function editarComercio(id) {
+  const { data: comercio, error: errorCarga } =
+    await clienteSupabase
+      .from("comercios")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+  if (errorCarga) {
+    console.error(errorCarga);
+    alert("No se pudieron cargar los datos del comercio.");
+    return;
+  }
+
+  const nombre = prompt(
+    "Nombre comercial:",
+    comercio.nombre_comercial || ""
+  );
+  if (nombre === null) return;
+
+  const categoria = prompt(
+    "Categoría:",
+    comercio.categoria || ""
+  );
+  if (categoria === null) return;
+
+  const localidad = prompt(
+    "Localidad:",
+    comercio.localidad || ""
+  );
+  if (localidad === null) return;
+
+  const whatsapp = prompt(
+    "WhatsApp con código de país:",
+    comercio.whatsapp || ""
+  );
+  if (whatsapp === null) return;
+
+  const plan = prompt(
+    "Plan: gratis, destacado o premium",
+    comercio.plan || "gratis"
+  );
+  if (plan === null) return;
+
+  if (
+    !nombre.trim() ||
+    !categoria.trim() ||
+    !localidad.trim() ||
+    !whatsapp.trim()
+  ) {
+    alert("Los campos principales no pueden quedar vacíos.");
+    return;
+  }
+
+  const { error } = await clienteSupabase
+    .from("comercios")
+    .update({
+      nombre_comercial: nombre.trim(),
+      categoria: categoria.trim(),
+      localidad: localidad.trim(),
+      whatsapp: whatsapp.replace(/\D/g, ""),
+      plan: plan.trim().toLowerCase()
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    alert("No se pudieron guardar los cambios.");
+    return;
+  }
+
+  alert("Comercio actualizado correctamente.");
+  await cargarComerciosActivos();
+}
+    
 async function cambiarEstadoComercio(id, estadoActual){
 
   const nuevoEstado = !estadoActual;
