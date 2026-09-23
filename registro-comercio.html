@@ -481,53 +481,8 @@
   });
 }
 
-async function cargarLocalidades() {
-
-  const selectLocalidad =
-    document.getElementById("localidad");
-
-  const { data, error } =
-    await clienteSupabase
-      .from("localidades")
-      .select("area, partido, nombre")
-      .eq("activo", true)
-      .order("area", { ascending: true })
-      .order("partido", { ascending: true })
-      .order("nombre", { ascending: true });
-
-  if (error) {
-
-    console.error(error);
-
-    selectLocalidad.innerHTML =
-      '<option value="">Error al cargar localidades</option>';
-
-    return;
-  }
-
-  selectLocalidad.innerHTML =
-    '<option value="">Seleccionar localidad</option>';
-
-  data.forEach((localidad) => {
-
-    const opcion =
-      document.createElement("option");
-
-    opcion.value =
-      localidad.nombre;
-
-    opcion.textContent =
-      `${localidad.nombre} — ${localidad.partido}`;
-
-    selectLocalidad.appendChild(opcion);
-
-  });
-
-}
 
 async function cargarLocalidades() {
-
-  async function cargarLocalidades() {
 
   const selectLocalidad =
     document.getElementById("localidad");
