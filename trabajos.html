@@ -152,53 +152,48 @@
 
 <main class="contenedor">
 
-  <div class="titulo">
-    <h2>🔧 Trabajos disponibles</h2>
-    <p>Solicitudes compatibles con tu perfil.</p>
+  <!-- TRABAJO REAL -->
+
+<div class="trabajo" id="trabajoCard">
+
+  <span class="estado" id="estadoOferta">
+    CARGANDO...
+  </span>
+
+  <h3 id="servicio">Cargando...</h3>
+
+  <div class="dato">
+    📍 <strong>Localidad:</strong>
+    <span id="localidad">Cargando...</span>
   </div>
 
-  <!-- TRABAJO DE PRUEBA -->
+  <div class="dato">
+    🛠️ <strong>Problema:</strong>
+    <span id="problema">Cargando...</span>
+  </div>
 
-  <div class="trabajo">
-
-    <span class="estado">
-      NUEVO TRABAJO
+  <div class="dato">
+    ⚡ <strong>Urgencia:</strong>
+    <span class="urgencia-normal" id="urgencia">
+      Cargando...
     </span>
-
-    <h3>Plomería</h3>
-
-    <div class="dato">
-      📍 <strong>Localidad:</strong>
-      Lanús
-    </div>
-
-    <div class="dato">
-      🛠️ <strong>Problema:</strong>
-      Pérdida de agua
-    </div>
-
-    <div class="dato">
-      ⚡ <strong>Urgencia:</strong>
-      <span class="urgencia-normal">
-        Normal
-      </span>
-    </div>
-
-    <div class="dato">
-      📋 <strong>Solicitud:</strong>
-      S365-20260918-1114
-    </div>
-
-    <button
-      class="boton-aceptar"
-      type="button"
-      onclick="avisoPrueba()">
-
-      ✅ ACEPTAR TRABAJO
-
-    </button>
-
   </div>
+
+  <div class="dato">
+    📋 <strong>Solicitud:</strong>
+    <span id="numeroSolicitud">Cargando...</span>
+  </div>
+
+  <button
+    class="boton-aceptar"
+    type="button"
+    onclick="avisoPrueba()">
+
+    ✅ ACEPTAR TRABAJO
+
+  </button>
+
+</div>
 
   <div class="nota">
     Esta es la primera versión de la pantalla del técnico.
@@ -214,6 +209,97 @@
 
 <script>
 
+async function cargarOferta() {
+
+  const token = new URLSearchParams(
+    window.location.search
+  ).get("token");
+
+  const estado = document.getElementById("estadoOferta");
+  const boton = document.querySelector(
+    'button[onclick="avisoPrueba()"]'
+  );
+
+  if (!token) {
+    estado.textContent = "ENLACE INVÁLIDO";
+    boton.disabled = true;
+    boton.textContent = "TRABAJO NO DISPONIBLE";
+    return;
+  }
+
+  try {
+
+    const respuesta = await fetch(
+      `/api/oferta?token=${encodeURIComponent(token)}`,
+      { cache: "no-store" }
+    );
+
+    const resultado = await respuesta.json();
+
+    if (!respuesta.ok) {
+      throw new Error(
+        resultado.error || "No se pudo cargar el trabajo"
+      );
+    }
+
+    const solicitud = resultado.solicitud;
+    const oferta = resultado.oferta;
+
+    if (!solicitud) {
+      throw new Error("No se encontraron los datos del trabajo");
+    }
+
+    document.getElementById("servicio").textContent =
+      solicitud.servicio || "Servicio";
+
+    document.getElementById("localidad").textContent =
+      solicitud.localidad || "-";
+
+    document.getElementById("problema").textContent =
+      solicitud.problema || "-";
+
+    document.getElementById("urgencia").textContent =
+      solicitud.urgencia || "Normal";
+
+    document.getElementById("numeroSolicitud").textContent =
+      solicitud.numero_solicitud || "-";
+
+    if (oferta.estado === "Pendiente") {
+
+      estado.textContent = "NUEVO TRABAJO";
+
+    } else {
+
+      estado.textContent = oferta.estado.toUpperCase();
+
+      boton.disabled = true;
+
+      if (oferta.estado === "Aceptada") {
+        boton.textContent = "✅ TRABAJO ACEPTADO";
+      } else {
+        boton.textContent = "TRABAJO NO DISPONIBLE";
+      }
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+    estado.textContent = "ERROR";
+
+    document.getElementById("servicio").textContent =
+      "No se pudo cargar el trabajo";
+
+    boton.disabled = true;
+    boton.textContent = "TRABAJO NO DISPONIBLE";
+  }
+}
+
+window.addEventListener(
+  "DOMContentLoaded",
+  cargarOferta
+);
+  
 async function avisoPrueba() {
   const boton = document.querySelector(
     'button[onclick="avisoPrueba()"]'
