@@ -1629,24 +1629,26 @@ document.addEventListener("DOMContentLoaded", function () {
   const notifOverlay = document.getElementById("notifOverlay");
 
   function abrirMenu() {
-    sideMenu.classList.add("open");
-    menuOverlay.classList.add("show");
-  }
+  cerrarNotificaciones();
+  sideMenu.classList.add("open");
+  menuOverlay.classList.add("show");
+}
 
-  function cerrarMenu() {
-    sideMenu.classList.remove("open");
-    menuOverlay.classList.remove("show");
-  }
+function cerrarMenu() {
+  sideMenu.classList.remove("open");
+  menuOverlay.classList.remove("show");
+}
 
-  function abrirNotificaciones() {
-    notifPanel.classList.add("open");
-    notifOverlay.classList.add("show");
-  }
+function abrirNotificaciones() {
+  cerrarMenu();
+  notifPanel.classList.add("open");
+  notifOverlay.classList.add("show");
+}
 
-  function cerrarNotificaciones() {
-    notifPanel.classList.remove("open");
-    notifOverlay.classList.remove("show");
-  }
+function cerrarNotificaciones() {
+  notifPanel.classList.remove("open");
+  notifOverlay.classList.remove("show");
+}
 
   if (menuBtn) menuBtn.addEventListener("click", abrirMenu);
   if (closeMenu) closeMenu.addEventListener("click", cerrarMenu);
