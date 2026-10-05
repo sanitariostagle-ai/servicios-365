@@ -383,7 +383,17 @@ onclick="window.print()">
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+
+const SUPABASE_URL = "ACA VA LA URL EXACTA DE admin.html";
+const SUPABASE_KEY = "ACA VA LA CLAVE PUBLISHABLE EXACTA DE admin.html";
+
+const clienteSupabase = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 function formatoPesos(valor){
 
