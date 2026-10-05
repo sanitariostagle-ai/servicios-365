@@ -387,9 +387,9 @@ onclick="window.print()">
 
 <script>
 
-const SUPABASE_URL = "ACA VA LA URL EXACTA DE admin.html";
-const SUPABASE_KEY = "ACA VA LA CLAVE PUBLISHABLE EXACTA DE admin.html";
-
+const SUPABASE_URL = "https://frbnlqihbxnesdbmduia.supabase.co";
+const SUPABASE_KEY = "sb_publishable_iSyhMVlbPHgIiDhkaz2zuA_B9oEzfvz";
+  
 const clienteSupabase = supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
@@ -533,7 +533,114 @@ function calcularTotal(){
 }
 
 
-function guardarPresupuesto(){
+async function guardarPresupuesto(){
+
+  const clienteNombre =
+    document.getElementById("cliente").value.trim();
+
+  if(!clienteNombre){
+    alert("Ingresá el nombre del cliente.");
+    return;
+  }
+
+  const materiales = [];
+
+  document.querySelectorAll(".material").forEach(fila => {
+
+    const descripcion =
+      fila.querySelector(".descripcion").value.trim();
+
+    const cantidad =
+      Number(fila.querySelector(".cantidad").value) || 0;
+
+    const precioUnitario =
+      Number(fila.querySelector(".precio").value) || 0;
+
+    if(descripcion || precioUnitario > 0){
+
+      materiales.push({
+        descripcion: descripcion || "Material",
+        cantidad: cantidad,
+        precio_unitario: precioUnitario,
+        subtotal: cantidad * precioUnitario
+      });
+
+    }
+
+  });
+
+  const materialesTotal =
+    materiales.reduce(
+      (suma, item) => suma + item.subtotal,
+      0
+    );
+
+  const manoObra =
+    Number(document.getElementById("manoObra").value) || 0;
+
+  const total =
+    materialesTotal + manoObra;
+
+  try {
+
+    const { data: presupuesto, error } =
+      await clienteSupabase
+      .from("presupuestos")
+      .insert([{
+        cliente_nombre: clienteNombre,
+        cliente_telefono: document.getElementById("telefono").value.trim(),
+        cliente_direccion: document.getElementById("direccion").value.trim(),
+        tipo_trabajo: document.getElementById("tipoTrabajo").value.trim(),
+        descripcion: document.getElementById("descripcion").value.trim(),
+        mano_obra: manoObra,
+        materiales_total: materialesTotal,
+        total: total,
+        forma_pago: document.getElementById("formaPago").value,
+        validez_dias: Number(document.getElementById("validez").value),
+        observaciones: document.getElementById("observaciones").value.trim(),
+        estado: "Borrador"
+      }])
+      .select("id")
+      .single();
+
+    if(error){
+      throw error;
+    }
+
+    if(materiales.length > 0){
+
+      const items = materiales.map(item => ({
+        presupuesto_id: presupuesto.id,
+        ...item
+      }));
+
+      const { error: errorItems } =
+        await clienteSupabase
+        .from("presupuesto_items")
+        .insert(items);
+
+      if(errorItems){
+        throw errorItems;
+      }
+    }
+
+    alert(
+      "✅ Presupuesto Nº " +
+      presupuesto.id +
+      " guardado correctamente."
+    );
+
+  } catch(error){
+
+    console.error(error);
+
+    alert(
+      "❌ No se pudo guardar el presupuesto.\n\n" +
+      error.message
+    );
+
+  }
+}
 
   alert(
     "Formulario listo. Ahora vamos a conectarlo con Supabase para guardar el presupuesto."
