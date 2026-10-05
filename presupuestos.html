@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Presupuestos | Servicios 365</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  margin:0;
+  background:#f4f7fb;
+  color:#172033;
+}
+
+header{
+  background:#087c62;
+  color:white;
+  padding:18px 20px;
+}
+
+header h1{
+  margin:0;
+  font-size:25px;
+}
+
+header p{
+  margin:5px 0 0;
+}
+
+.contenedor{
+  max-width:900px;
+  margin:25px auto;
+  padding:15px;
+}
+
+.volver{
+  display:inline-block;
+  margin-bottom:15px;
+  text-decoration:none;
+  color:#087c62;
+  font-weight:bold;
+}
+
+.tarjeta{
+  background:white;
+  padding:25px;
+  border-radius:18px;
+  box-shadow:0 5px 20px rgba(0,0,0,.08);
+  margin-bottom:20px;
+}
+
+h2{
+  margin-top:0;
+  color:#087c62;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.campo{
+  margin-bottom:15px;
+}
+
+label{
+  display:block;
+  font-weight:bold;
+  margin-bottom:6px;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccd3dc;
+  border-radius:8px;
+  font-size:16px;
+}
+
+textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+.material{
+  display:grid;
+  grid-template-columns:2fr .6fr 1fr 1fr auto;
+  gap:8px;
+  margin-bottom:8px;
+  align-items:center;
+}
+
+.material input{
+  margin:0;
+}
+
+.btn{
+  border:none;
+  border-radius:9px;
+  padding:13px 18px;
+  font-weight:bold;
+  cursor:pointer;
+  font-size:15px;
+}
+
+.btn-agregar{
+  background:#e8f3ef;
+  color:#087c62;
+  margin:10px 0 20px;
+}
+
+.btn-eliminar{
+  background:#dc2626;
+  color:white;
+  padding:10px 12px;
+}
+
+.totales{
+  background:#f1f7f5;
+  border-radius:12px;
+  padding:18px;
+  margin-top:20px;
+}
+
+.fila-total{
+  display:flex;
+  justify-content:space-between;
+  margin:8px 0;
+  font-size:18px;
+}
+
+.total-final{
+  border-top:2px solid #087c62;
+  padding-top:12px;
+  font-size:25px;
+  font-weight:bold;
+  color:#087c62;
+}
+
+.acciones{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:22px;
+}
+
+.guardar{
+  background:#087c62;
+  color:white;
+}
+
+.whatsapp{
+  background:#25D366;
+  color:white;
+}
+
+.imprimir{
+  background:#455a64;
+  color:white;
+}
+
+@media(max-width:700px){
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .material{
+    grid-template-columns:1fr 1fr;
+    background:#f5f7fa;
+    padding:12px;
+    border-radius:10px;
+  }
+
+  .material .descripcion{
+    grid-column:1 / -1;
+  }
+
+  .acciones{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+  <h1>📄 Presupuestos</h1>
+  <p>Servicios 365 · Soluciones Técnicas</p>
+</header>
+
+<div class="contenedor">
+
+<a href="index.html" class="volver">
+  ← Volver al inicio
+</a>
+
+<div class="tarjeta">
+
+<h2>Nuevo presupuesto</h2>
+
+<div class="grid">
+
+  <div class="campo">
+    <label>Nombre del cliente</label>
+    <input id="cliente" type="text" placeholder="Ej: Juan Pérez">
+  </div>
+
+  <div class="campo">
+    <label>Teléfono / WhatsApp</label>
+    <input id="telefono" type="tel" placeholder="Ej: 11 1234 5678">
+  </div>
+
+  <div class="campo">
+    <label>Dirección</label>
+    <input id="direccion" type="text" placeholder="Dirección del trabajo">
+  </div>
+
+  <div class="campo">
+    <label>Tipo de trabajo</label>
+    <input id="tipoTrabajo" type="text" placeholder="Ej: Cambio de termotanque">
+  </div>
+
+</div>
+
+<div class="campo">
+  <label>Descripción del trabajo</label>
+  <textarea id="descripcion"
+  placeholder="Detalle del trabajo a realizar"></textarea>
+</div>
+
+<h2>Materiales</h2>
+
+<div id="materiales">
+
+  <div class="material">
+
+    <input class="descripcion"
+    type="text"
+    placeholder="Material">
+
+    <input class="cantidad"
+    type="number"
+    value="1"
+    min="1"
+    oninput="calcularTotal()">
+
+    <input class="precio"
+    type="number"
+    placeholder="Precio"
+    oninput="calcularTotal()">
+
+    <input class="subtotal"
+    type="text"
+    value="$ 0"
+    readonly>
+
+    <button
+    class="btn btn-eliminar"
+    onclick="eliminarMaterial(this)">
+    ✕
+    </button>
+
+  </div>
+
+</div>
+
+<button
+class="btn btn-agregar"
+onclick="agregarMaterial()">
+＋ Agregar material
+</button>
+
+<div class="campo">
+
+<label>Mano de obra</label>
+
+<input
+id="manoObra"
+type="number"
+placeholder="$ 0"
+oninput="calcularTotal()">
+
+</div>
+
+<div class="grid">
+
+<div class="campo">
+
+<label>Forma de pago</label>
+
+<select id="formaPago">
+
+<option value="">Seleccionar</option>
+<option>Efectivo</option>
+<option>Transferencia</option>
+<option>Tarjeta</option>
+<option>Otro</option>
+
+</select>
+
+</div>
+
+<div class="campo">
+
+<label>Validez del presupuesto</label>
+
+<select id="validez">
+
+<option value="7">7 días</option>
+<option value="15">15 días</option>
+<option value="30">30 días</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="campo">
+
+<label>Observaciones</label>
+
+<textarea
+id="observaciones"
+placeholder="Condiciones, aclaraciones, garantía, etc."></textarea>
+
+</div>
+
+<div class="totales">
+
+<div class="fila-total">
+<span>Materiales</span>
+<strong id="totalMateriales">$ 0</strong>
+</div>
+
+<div class="fila-total">
+<span>Mano de obra</span>
+<strong id="totalManoObra">$ 0</strong>
+</div>
+
+<div class="fila-total total-final">
+<span>TOTAL</span>
+<span id="totalGeneral">$ 0</span>
+</div>
+
+</div>
+
+<div class="acciones">
+
+<button
+class="btn guardar"
+onclick="guardarPresupuesto()">
+💾 Guardar
+</button>
+
+<button
+class="btn whatsapp"
+onclick="enviarWhatsApp()">
+🟢 WhatsApp
+</button>
+
+<button
+class="btn imprimir"
+onclick="window.print()">
+🖨 Imprimir
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function formatoPesos(valor){
+
+  return new Intl.NumberFormat(
+    "es-AR",
+    {
+      style:"currency",
+      currency:"ARS",
+      maximumFractionDigits:0
+    }
+  ).format(valor || 0);
+
+}
+
+
+function agregarMaterial(){
+
+  const contenedor =
+    document.getElementById("materiales");
+
+  const fila =
+    document.createElement("div");
+
+  fila.className = "material";
+
+  fila.innerHTML = `
+
+    <input
+    class="descripcion"
+    type="text"
+    placeholder="Material">
+
+    <input
+    class="cantidad"
+    type="number"
+    value="1"
+    min="1"
+    oninput="calcularTotal()">
+
+    <input
+    class="precio"
+    type="number"
+    placeholder="Precio"
+    oninput="calcularTotal()">
+
+    <input
+    class="subtotal"
+    type="text"
+    value="$ 0"
+    readonly>
+
+    <button
+    class="btn btn-eliminar"
+    onclick="eliminarMaterial(this)">
+    ✕
+    </button>
+  `;
+
+  contenedor.appendChild(fila);
+
+}
+
+
+function eliminarMaterial(boton){
+
+  const filas =
+    document.querySelectorAll(".material");
+
+  if(filas.length === 1){
+
+    alert(
+      "Debe quedar al menos un material."
+    );
+
+    return;
+
+  }
+
+  boton.parentElement.remove();
+
+  calcularTotal();
+
+}
+
+
+function calcularTotal(){
+
+  let materiales = 0;
+
+  document
+  .querySelectorAll(".material")
+  .forEach(fila => {
+
+    const cantidad =
+      Number(
+        fila.querySelector(".cantidad").value
+      ) || 0;
+
+    const precio =
+      Number(
+        fila.querySelector(".precio").value
+      ) || 0;
+
+    const subtotal =
+      cantidad * precio;
+
+    fila.querySelector(".subtotal").value =
+      formatoPesos(subtotal);
+
+    materiales += subtotal;
+
+  });
+
+  const manoObra =
+    Number(
+      document.getElementById("manoObra").value
+    ) || 0;
+
+  const total =
+    materiales + manoObra;
+
+  document.getElementById(
+    "totalMateriales"
+  ).textContent =
+    formatoPesos(materiales);
+
+  document.getElementById(
+    "totalManoObra"
+  ).textContent =
+    formatoPesos(manoObra);
+
+  document.getElementById(
+    "totalGeneral"
+  ).textContent =
+    formatoPesos(total);
+
+}
+
+
+function guardarPresupuesto(){
+
+  alert(
+    "Formulario listo. Ahora vamos a conectarlo con Supabase para guardar el presupuesto."
+  );
+
+}
+
+
+function enviarWhatsApp(){
+
+  const cliente =
+    document.getElementById("cliente").value;
+
+  const telefono =
+    document.getElementById("telefono")
+    .value
+    .replace(/\D/g,"");
+
+  const trabajo =
+    document.getElementById("tipoTrabajo").value;
+
+  const total =
+    document.getElementById(
+      "totalGeneral"
+    ).textContent;
+
+  const mensaje =
+`Hola ${cliente}.
+
+Te envío el presupuesto solicitado desde Servicios 365.
+
+Trabajo: ${trabajo}
+
+TOTAL: ${total}
+
+Quedo a disposición ante cualquier consulta.`;
+
+  const url =
+    `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+
+  window.open(url,"_blank");
+
+}
+
+calcularTotal();
+
+</script>
+
+</body>
+</html>
